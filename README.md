@@ -28,7 +28,7 @@ Sistema web de controle de estoque: checkup diário, estoque por local, externas
 ### 2b. Ativar no Supabase
 1. **Authentication → Sign In / Providers → Google**: ative, cole o ID do cliente e a chave secreta, salve.
 2. **Authentication → URL Configuration**:
-   - **Site URL**: o endereço do site na Vercel (ex.: `https://estoque-mbl.vercel.app`)
+   - **Site URL**: o endereço do site na Vercel (atualmente `https://estoque-mbl.vercel.app`)
    - **Redirect URLs**: adicione o mesmo endereço (e `http://localhost:3000` se for testar no computador).
 
 ## 3. Configurar o app
