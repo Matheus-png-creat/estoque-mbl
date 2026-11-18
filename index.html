@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Estoque de Equipamentos · MBL</title>
+<link rel="icon" href="logo.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<style>
+body{margin:0}[hidden]{display:none!important}img{max-width:100%}
+/* Layout: faixa superior azul-marinho com abas; fundo creme, cartões brancos, tipografia larga e pesada nos títulos */
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface-2: #eeebe3;
+  --line: #ddd8cc;
+  --fg: #0f1d40;
+  --muted: #5b6482;
+  --accent: #0e2a6e;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2e8f6;
+  --hi: #22c3d6;
+  --head: #0e2a6e; --head-fg: #ffffff; --head-muted: #aab8dc;
+  --in: #157a4a;  --in-soft: #dcf1e5;
+  --out: #b8392a; --out-soft: #f8e1dc;
+  --adj: #5a4fb0; --adj-soft: #e8e5f7;
+  --warn: #9a6400; --warn-soft: #f8ecd2;
+  --shadow: 0 1px 2px rgba(14,42,110,.06), 0 10px 28px rgba(14,42,110,.10);
+  --f-display: "Archivo", "Arial Black", system-ui, sans-serif;
+  --f-body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0a1430; --surface: #0f1e45; --surface-2: #152a5a; --line: #24396f;
+  --fg: #eef1f8; --muted: #9eabca; --accent: #3fd0e2; --accent-ink: #06142e; --accent-soft: #123a55; --hi: #3fd0e2;
+  --head: #071029; --head-fg: #ffffff; --head-muted: #8f9ec4;
+  --in: #5cc98a; --in-soft: #12352a; --out: #f28c78; --out-soft: #3c1f25;
+  --adj: #a99cf0; --adj-soft: #262555; --warn: #f0b45a; --warn-soft: #3a2c18;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0a1430; --surface: #0f1e45; --surface-2: #152a5a; --line: #24396f;
+  --fg: #eef1f8; --muted: #9eabca; --accent: #3fd0e2; --accent-ink: #06142e; --accent-soft: #123a55; --hi: #3fd0e2;
+  --head: #071029; --head-fg: #ffffff; --head-muted: #8f9ec4;
+  --in: #5cc98a; --in-soft: #12352a; --out: #f28c78; --out-soft: #3c1f25;
+  --adj: #a99cf0; --adj-soft: #262555; --warn: #f0b45a; --warn-soft: #3a2c18;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4); color-scheme: dark;
+}
+.brand h1, .kpi b, .bar h2, .report-head h3, dialog h2, .empty strong { font-stretch: 125%; font-weight: 800; letter-spacing: -.015em; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--head); }
+.num, td.n, .kpi b { font-variant-numeric: tabular-nums; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--head); color: var(--head-fg); border-bottom: 3px solid var(--hi);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.top-in { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px 0; }
+.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+.brand-logo { height: 28px; width: auto; display: block; padding-right: 12px; border-right: 1px solid rgba(255,255,255,.25); }
+.brand-mark { width: 32px; height: 32px; border-radius: 4px; background: var(--hi); display: grid; place-items: center; }
+.brand-mark svg { width: 18px; height: 18px; stroke: #0e2a6e; }
+.brand h1 { font-family: var(--f-display); font-size: 18px; margin: 0; }
+.brand small { display: block; color: var(--head-muted); font-size: 12px; }
+.quick { display: flex; gap: 8px; }
+.top .btn { background: transparent; border-color: rgba(255,255,255,.35); color: var(--head-fg); }
+.top .btn:hover { background: rgba(255,255,255,.1); }
+.top .btn.in, .top .btn.out { color: #ffffff; font-weight: 600; }
+.top .btn.in { background: #1f9d55; border-color: #1f9d55; }
+.top .btn.out { background: #d64532; border-color: #d64532; }
+.top .btn.in:hover, .top .btn.out:hover { filter: brightness(1.1); }
+.top .btn.in .sign, .top .btn.out .sign { color: #ffffff; }
+.top .btn .sign { color: var(--hi); }
+nav.tabs { flex-basis: 100%; display: flex; gap: 2px; overflow-x: auto; }
+nav.tabs a { padding: 10px 14px; color: var(--head-muted); text-decoration: none; font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .07em; border-bottom: 3px solid transparent; margin-bottom: -3px; white-space: nowrap; }
+nav.tabs a:hover { color: var(--head-fg); }
+nav.tabs a[aria-current="page"] { color: var(--head-fg); border-bottom-color: var(--hi); }
+
+main { max-width: 1180px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); text-transform: uppercase; font-size: 12.5px; letter-spacing: .06em; font-weight: 700; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.in { color: var(--in); } .btn.out { color: var(--out); }
+.btn.danger { color: var(--out); border-color: var(--out); }
+.btn.sm { padding: 4px 9px; font-size: 12.5px; border-radius: 6px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn .sign { font-family: var(--f-mono); font-weight: 600; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 14px 16px; border-top: 3px solid var(--accent); }
+.kpi span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.kpi b { display: block; font-family: var(--f-display); font-size: 28px; margin-top: 4px; color: var(--accent); }
+.kpi.alert { border-top-color: var(--warn); }
+.kpi.alert b { color: var(--warn); }
+@media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; min-width: 0; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.bar .grow { flex: 1 1 200px; }
+.bar h2 { font-family: var(--f-display); font-size: 15px; font-weight: 600; margin: 0 auto 0 0; align-self: center; }
+label.f, div.f { display: grid; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 500; }
+label.f > span, div.f > span { text-transform: uppercase; letter-spacing: .05em; }
+input[type=text], input[type=search], input[type=number], input[type=date], select, textarea {
+  background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; min-width: 0; width: 100%; color: var(--fg); }
+textarea { resize: vertical; min-height: 60px; }
+.check { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; align-self: center; }
+
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 9px 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-family: var(--f-body); font-variant-numeric: tabular-nums; }
+th { font-family: var(--f-body); }
+td.n b { font-weight: 500; font-size: 15px; }
+td .sub { color: var(--muted); font-size: 12px; }
+td.acts { white-space: nowrap; text-align: right; }
+td.acts .btn + .btn { margin-left: 4px; }
+tfoot td { font-weight: 600; background: var(--surface-2); }
+.pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.pill.ok { background: var(--in-soft); color: var(--in); }
+.pill.low { background: var(--warn-soft); color: var(--warn); }
+.pill.zero { background: var(--out-soft); color: var(--out); }
+.pill.entrada { background: var(--in-soft); color: var(--in); }
+.pill.saida { background: var(--out-soft); color: var(--out); }
+.pill.ajuste { background: var(--adj-soft); color: var(--adj); }
+.pill.off { background: var(--surface-2); color: var(--muted); }
+.pill.ext { background: var(--accent-soft); color: var(--accent); }
+.pill.late { background: var(--out-soft); color: var(--out); }
+.gate { position: fixed; inset: 0; z-index: 50; background: var(--head); color: var(--head-fg); display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); font-family: var(--f-body); }
+.gate-card { width: min(420px, 100%); background: var(--surface); color: var(--fg); border-radius: 6px; padding: 32px 28px; text-align: center; display: grid; gap: 14px; justify-items: center; box-shadow: var(--shadow); border-top: 4px solid var(--hi); }
+.gate-logo { height: 44px; width: auto; background: var(--head); padding: 10px 16px; border-radius: 4px; }
+.gate-card h1 { font-family: var(--f-display); font-stretch: 125%; font-weight: 800; font-size: 22px; margin: 4px 0 0; }
+.gate-card p { margin: 0; color: var(--muted); }
+.gbtn { padding: 11px 18px; font-size: 13px; }
+.gbtn svg { background: #fff; border-radius: 50%; padding: 2px; }
+.me { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
+.me img { width: 28px; height: 28px; border-radius: 50%; }
+.me b { display: block; font-weight: 600; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.me span { color: var(--head-muted); font-size: 11.5px; }
+@media (max-width: 720px) { .me div { display: none; } }
+body:not(.is-adm) .adm-only { display: none; }
+.u-who { display: flex; align-items: center; gap: 10px; }
+.u-who img, .u-ini { width: 32px; height: 32px; border-radius: 50%; flex: none; }
+.u-ini { display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+#uBody select { width: auto; min-width: 140px; }
+.ck-head { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.ck-today { flex: 1 1 260px; font-size: 13px; }
+.ck-today b { font-weight: 600; }
+.ck-prog { display: flex; align-items: center; gap: 10px; }
+.ck-bar { width: 140px; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.ck-bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.ck-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+tr.ck-ok > td:first-child { box-shadow: inset 4px 0 0 var(--in); }
+tr.ck-dif > td:first-child { box-shadow: inset 4px 0 0 var(--out); }
+tr.ck-dif td.n input { border-color: var(--out); color: var(--out); font-weight: 600; }
+tr.ck-ok td.n input { border-color: var(--in); }
+#ckBody input[type=text] { min-width: 160px; }
+.btn.ckok-on { background: var(--in-soft); border-color: var(--in); color: var(--in); }
+.pill.part { background: var(--warn-soft); color: var(--warn); }
+.pill.done { background: var(--in-soft); color: var(--in); }
+dialog.wide { width: min(760px, calc(100vw - 32px)); }
+.pick { max-height: 280px; overflow: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); }
+.pick-row { display: grid; grid-template-columns: auto minmax(0,1fr) auto 76px; gap: 10px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); cursor: pointer; color: var(--fg); font-size: 14px; font-weight: 400; }
+.pick-row:last-child { border-bottom: 0; }
+.pick-row:has(input[type=checkbox]:checked) { background: var(--accent-soft); }
+.pick-row.off { opacity: .5; cursor: not-allowed; }
+.pick-row small { display: block; color: var(--muted); font-size: 12px; }
+.pick-row .pd { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.pick-row input[type=number] { padding: 5px 8px; }
+.thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+.thumbs .th { position: relative; width: 88px; height: 88px; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); display: block; }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumbs .rm { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; border: 0; background: rgba(0,0,0,.65); color: #fff; cursor: pointer; padding: 0; line-height: 22px; font-size: 14px; }
+.xcard { display: grid; grid-template-columns: 104px minmax(0,1fr) auto; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line); align-items: center; }
+.xcard:last-child { border-bottom: 0; }
+.xcard .ph { width: 104px; height: 78px; border-radius: 4px; overflow: hidden; background: var(--surface-2); display: grid; place-items: center; color: var(--muted); font-size: 11px; text-align: center; }
+.xcard .ph img { width: 100%; height: 100%; object-fit: cover; }
+.xcard h3 { margin: 0; font-size: 15px; font-weight: 700; font-stretch: 112%; }
+.xcard .meta { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.xcard .its { font-size: 13px; margin-top: 6px; }
+.xcard .side { display: grid; gap: 8px; justify-items: end; }
+@media (max-width: 560px) { .xcard { grid-template-columns: 72px minmax(0,1fr); } .xcard .ph { width: 72px; height: 60px; } .xcard .side { grid-column: 1 / -1; grid-auto-flow: column; justify-content: start; align-items: center; } }
+th[data-sort] { cursor: pointer; user-select: none; }
+th[data-sort]:hover { color: var(--fg); }
+th[data-sort]::after { content: "↕"; margin-left: 5px; opacity: .35; font-size: 11px; }
+th[aria-sort="ascending"], th[aria-sort="descending"] { color: var(--accent); }
+th[aria-sort="ascending"]::after { content: "↑"; opacity: 1; }
+th[aria-sort="descending"]::after { content: "↓"; opacity: 1; }
+.q-in { color: var(--in); } .q-out { color: var(--out); } .q-adj { color: var(--adj); }
+
+.empty { padding: 40px 20px; text-align: center; color: var(--muted); display: grid; gap: 10px; justify-items: center; }
+.empty strong { color: var(--fg); font-family: var(--f-display); font-size: 16px; }
+.note { padding: 10px 14px; border-radius: 8px; background: var(--warn-soft); color: var(--warn); font-size: 13px; }
+.note.info { background: var(--accent-soft); color: var(--accent); }
+
+.report-head { padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-bottom: 1px solid var(--line); }
+.report-head h3 { margin: 0 auto 0 0; font-family: var(--f-display); font-size: 15px; font-weight: 600; }
+.report-head .meta { color: var(--muted); font-size: 12.5px; flex-basis: 100%; order: 3; }
+
+dialog { border: 1px solid var(--line); border-radius: 14px; padding: 0; background: var(--surface); color: var(--fg); box-shadow: var(--shadow); width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 40px); }
+dialog::backdrop { background: rgba(10,20,25,.45); }
+dialog form { display: grid; gap: 14px; padding: 20px; }
+dialog h2 { font-family: var(--f-display); font-size: 18px; margin: 0; font-weight: 600; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .grid2 { grid-template-columns: 1fr; } }
+.dlg-acts { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg label { text-align: center; padding: 8px; cursor: pointer; font-weight: 500; color: var(--muted); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { color: var(--fg); background: var(--surface-2); }
+.seg label.t-entrada:has(input:checked) { background: var(--in-soft); color: var(--in); }
+.seg label.t-saida:has(input:checked) { background: var(--out-soft); color: var(--out); }
+.seg label.t-ajuste:has(input:checked) { background: var(--adj-soft); color: var(--adj); }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+.hint { font-size: 12.5px; color: var(--muted); }
+.err { color: var(--out); font-size: 13px; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-weight: 500; z-index: 20; box-shadow: var(--shadow); max-width: calc(100vw - 32px); }
+@media (prefers-reduced-motion: no-preference) { .toast { animation: rise .2s ease-out; } @keyframes rise { from { transform: translate(-50%, 8px); opacity: 0; } } }
+.status { font-size: 12.5px; color: var(--muted); }
+@media (max-width: 560px) { .quick .lbl { display: none; } }
+</style>
+
+</head><body>
+<div id="gate" class="gate">Carregando…</div>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <img class="brand-logo" src="logo.png" alt="MBL" width="76" height="28">
+      <div><h1>Estoque de Equipamentos</h1><small id="sync">Conectando…</small></div>
+    </div>
+    <div class="me"><img id="meuAvatar" alt="" hidden referrerpolicy="no-referrer"><div><b id="meuNome"></b><span id="meuPapel"></span></div><button class="btn sm" type="button" id="btnSair">Sair</button></div>
+    <div class="quick" data-write>
+      <button class="btn in" type="button" id="qIn"><span class="sign">+</span><span class="lbl">Entrada</span></button>
+      <button class="btn out" type="button" id="qOut"><span class="sign">−</span><span class="lbl">Saída</span></button>
+    </div>
+    <nav class="tabs" aria-label="Seções">
+      <a href="#checkup">Checkup</a>
+      <a href="#estoque">Estoque</a>
+      <a href="#externas">Externas</a>
+      <a href="#movimentacoes">Movimentações</a>
+      <a href="#relatorios">Relatórios</a>
+      <a href="#usuarios" id="navUsu" class="adm-only">Usuários</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div id="readonly" class="note info" hidden>Você está com acesso somente de leitura. Peça ao dono do sistema acesso de Colaborador para lançar entradas e saídas.</div>
+  <div id="offline" class="note" hidden></div>
+
+  <!-- ESTOQUE -->
+  <section id="v-estoque" data-view>
+    <div class="kpis">
+      <div class="kpi"><span>Itens cadastrados</span><b id="kItens">–</b></div>
+      <div class="kpi"><span>Unidades em estoque</span><b id="kUn">–</b></div>
+      <div class="kpi alert"><span>Abaixo do mínimo</span><b id="kLow">–</b></div>
+      <div class="kpi"><span>Movimentações no mês</span><b id="kMes">–</b></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="bar">
+        <label class="f grow"><span>Buscar</span><input type="search" id="eBusca" placeholder="Nome, categoria ou local"></label>
+        <label class="f"><span>Local</span><select id="eLoc"><option value="">Todos</option></select></label>
+        <label class="f"><span>Categoria</span><select id="eCat"><option value="">Todas</option></select></label>
+        <label class="f"><span>Situação</span><select id="eSit"><option value="">Todas</option><option value="low">Abaixo do mínimo</option><option value="zero">Zerados</option><option value="ext">Em externa</option></select></label>
+        <label class="check"><input type="checkbox" id="eArq"> Mostrar arquivados</label>
+        <button class="btn primary" type="button" id="btnNovoItem" data-write>+ Novo item</button>
+      </div>
+      <div class="tw"><table>
+        <thead id="eHead"><tr><th data-sort="nome">Item</th><th data-sort="categoria">Categoria</th><th data-sort="local">Local</th><th class="n" data-sort="s">Unidades</th><th class="n" data-sort="minimo">Mínimo</th><th data-sort="sit">Situação</th><th></th></tr></thead>
+        <tbody id="eBody"></tbody>
+      </table></div>
+      <div id="eEmpty" class="empty" hidden>
+        <strong>Nenhum item cadastrado ainda</strong>
+        <span>Cadastre os tipos de equipamento que vocês guardam (ex.: “Mouse USB”, “Cabo HDMI 2 m”) e depois lance as entradas com as quantidades.</span>
+        <button class="btn primary" type="button" id="btnNovoItem2" data-write>+ Cadastrar primeiro item</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXTERNAS -->
+  <section id="v-externas" data-view hidden>
+    <div class="panel">
+      <div class="bar">
+        <h2>Externas</h2>
+        <label class="f"><span>Mostrar</span><select id="xSt"><option value="abertas">Em andamento</option><option value="concluidas">Concluídas</option><option value="">Todas</option></select></label>
+        <button class="btn primary" type="button" id="btnNovaExt" data-write>+ Nova externa</button>
+      </div>
+      <div id="xList" class="xlist"></div>
+      <div id="xEmpty" class="empty" hidden><strong id="xEmptyT">Nenhuma externa em andamento</strong><span>Crie uma externa para registrar de uma vez os equipamentos que estão saindo, com fotos.</span></div>
+    </div>
+  </section>
+
+  <!-- CHECKUP -->
+  <section id="v-checkup" data-view hidden>
+    <div class="panel">
+      <div class="bar">
+        <h2>Checkup diário</h2>
+        <label class="f"><span>Data</span><input type="date" id="ckData"></label>
+        <label class="f"><span>Local</span><select id="ckLoc"><option value="">Todos</option></select></label>
+        <label class="f grow"><span>Buscar</span><input type="search" id="ckBusca" placeholder="Filtrar itens"></label>
+      </div>
+      <div class="ck-head">
+        <div id="ckHoje" class="ck-today"></div>
+        <div class="ck-prog"><div class="ck-bar"><i id="ckBar"></i></div><span id="ckTxt" class="status"></span></div>
+        <div class="ck-acts" data-write>
+          <button class="btn" type="button" id="ckTodos">✓ Marcar restantes como OK</button>
+          <button class="btn primary" type="button" id="ckFim">Concluir checkup</button>
+        </div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Item</th><th class="n">Esperado</th><th class="n">Encontrado</th><th></th><th>Observação</th></tr></thead>
+        <tbody id="ckBody"></tbody>
+      </table></div>
+      <div id="ckEmpty" class="empty" hidden><strong>Nenhum item para conferir</strong><span>Escolha outro local ou cadastre itens na aba Estoque.</span></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="bar"><h2>Histórico de checkups</h2></div>
+      <div class="tw"><table>
+        <thead><tr><th>Data</th><th>Local</th><th>Feito por</th><th>Hora</th><th>Resultado</th><th></th></tr></thead>
+        <tbody id="ckHist"></tbody>
+      </table></div>
+      <div id="ckHistEmpty" class="empty" hidden><strong>Nenhum checkup salvo ainda</strong><span>Confira os itens acima e clique em Concluir checkup.</span></div>
+    </div>
+  </section>
+
+  <!-- USUÁRIOS -->
+  <section id="v-usuarios" data-view hidden>
+    <div class="panel">
+      <div class="bar"><h2>Usuários</h2></div>
+      <div class="note info" style="margin:14px 16px 0">Quem entra pela primeira vez com o Google aparece aqui como <b>Sem acesso</b>. Escolha <b>Comum</b> ou <b>ADM</b> para liberar. ADM pode editar e excluir itens, excluir lançamentos e gerenciar usuários. Comum lança entradas, saídas, externas e checkups.</div>
+      <div class="tw" style="margin-top:14px"><table>
+        <thead><tr><th>Pessoa</th><th>Acesso atual</th><th>Alterar para</th><th>Desde</th></tr></thead>
+        <tbody id="uBody"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- MOVIMENTAÇÕES -->
+  <section id="v-movimentacoes" data-view hidden>
+    <div class="panel">
+      <div class="bar">
+        <label class="f"><span>De</span><input type="date" id="mDe"></label>
+        <label class="f"><span>Até</span><input type="date" id="mAte"></label>
+        <label class="f"><span>Tipo</span><select id="mTipo"><option value="">Todos</option><option value="entrada">Entradas</option><option value="saida">Saídas</option><option value="ajuste">Ajustes</option></select></label>
+        <label class="f grow"><span>Buscar</span><input type="search" id="mBusca" placeholder="Item, destino, motivo"></label>
+      </div>
+      <div class="tw"><table>
+        <thead id="mHead"><tr><th data-sort="data">Data</th><th data-sort="tipo">Tipo</th><th data-sort="item">Item</th><th class="n" data-sort="qtd">Qtd.</th><th data-sort="destino">Destino / origem</th><th data-sort="motivo">Motivo</th><th data-sort="usuario">Lançado por</th><th></th></tr></thead>
+        <tbody id="mBody"></tbody>
+      </table></div>
+      <div id="mEmpty" class="empty" hidden><strong>Nenhuma movimentação neste filtro</strong><span>Ajuste o período ou lance uma entrada pelo botão no topo.</span></div>
+    </div>
+  </section>
+
+  <!-- RELATÓRIOS -->
+  <section id="v-relatorios" data-view hidden>
+    <div class="panel">
+      <div class="bar">
+        <label class="f"><span>Relatório</span>
+          <select id="rTipo">
+            <option value="periodo">Movimentações no período</option>
+            <option value="resumo">Resumo por item no período</option>
+            <option value="saldo">Saldo em uma data</option>
+            <option value="consumo">Saídas por destino</option>
+            <option value="minimo">Itens abaixo do mínimo</option>
+          </select></label>
+        <label class="f" id="rDeW"><span>De</span><input type="date" id="rDe"></label>
+        <label class="f" id="rAteW"><span id="rAteL">Até</span><input type="date" id="rAte"></label>
+        <label class="f"><span>Local</span><select id="rLoc"><option value="">Todos</option></select></label>
+        <label class="f"><span>Categoria</span><select id="rCat"><option value="">Todas</option></select></label>
+        <label class="f grow"><span>Item</span><select id="rItem"><option value="">Todos</option></select></label>
+      </div>
+      <div class="report-head">
+        <h3 id="rTitulo">Relatório</h3>
+        <button class="btn" type="button" id="rXlsx">Exportar Excel</button>
+        <button class="btn" type="button" id="rPdf">Exportar PDF</button>
+        <div class="meta" id="rMeta"></div>
+      </div>
+      <div class="tw"><table id="rTable"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+      <div id="rEmpty" class="empty" hidden><strong>Nada a mostrar</strong><span>Não há registros para os filtros escolhidos.</span></div>
+    </div>
+  </section>
+</main>
+
+<!-- Diálogo: item -->
+<dialog id="dItem">
+  <form id="fItem" method="dialog">
+    <h2 id="dItemT">Novo item</h2>
+    <label class="f"><span>Nome do item *</span><input type="text" id="iNome" required maxlength="120" placeholder="Ex.: Mouse USB"></label>
+    <div class="grid2">
+      <label class="f"><span>Categoria</span><input type="text" id="iCat" list="lCat" maxlength="60" placeholder="Ex.: Periféricos"></label>
+      <label class="f"><span>Unidade</span><select id="iUn"><option value="un">Unidade (un)</option><option value="cx">Caixa (cx)</option><option value="pct">Pacote (pct)</option><option value="par">Par</option><option value="m">Metro (m)</option><option value="rolo">Rolo</option><option value="kg">Quilo (kg)</option></select></label>
+      <label class="f" id="iSaldoW"><span id="iSaldoL">Quantidade</span><input type="number" id="iSaldo" min="0" step="1" value="0"></label>
+      <label class="f"><span>Local</span><select id="iLocal"></select></label>
+    </div>
+    <input type="hidden" id="iMin" value="0">
+    <div class="grid2" id="iSitW" hidden>
+      <label class="f"><span>Situação</span><select id="iSit"><option value="local">No local</option><option value="ext">Em externa</option></select></label>
+      <label class="f" id="iExtW"><span>Unidades em externa</span><input type="number" id="iExt" min="0" step="1"></label>
+      <label class="f" id="iExtDestW" style="grid-column: 1 / -1"><span>Para onde foi (opcional)</span><input type="text" id="iExtDest" list="lDest" maxlength="80" placeholder="Ex.: Gravação Av. Paulista"></label>
+    </div>
+    <div class="hint" id="iSaldoHint" hidden>Ao mudar a quantidade, o sistema registra um ajuste no histórico com a diferença.</div>
+    <label class="f"><span>Observações</span><textarea id="iObs" maxlength="500"></textarea></label>
+    <div class="err" id="iErr" hidden></div>
+    <div class="dlg-acts">
+      <button class="btn danger" type="button" id="iArq" hidden>Arquivar</button>
+      <span style="flex:1"></span>
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn primary" type="submit" id="iSalvar">Salvar item</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Diálogo: movimentação -->
+<dialog id="dMov">
+  <form id="fMov" method="dialog">
+    <h2>Lançar movimentação</h2>
+    <div class="seg" role="radiogroup" aria-label="Tipo">
+      <label class="t-entrada"><input type="radio" name="mvTipo" value="entrada" checked> Entrada</label>
+      <label class="t-saida"><input type="radio" name="mvTipo" value="saida"> Saída</label>
+      <label class="t-ajuste"><input type="radio" name="mvTipo" value="ajuste"> Ajuste</label>
+    </div>
+    <label class="f"><span>Item *</span><select id="mvItem" required></select></label>
+    <div class="hint" id="mvSaldo"></div>
+    <div class="grid2">
+      <label class="f"><span id="mvQtdL">Quantidade *</span><input type="number" id="mvQtd" min="0" step="1" required></label>
+      <label class="f"><span>Data *</span><input type="date" id="mvData" required></label>
+      <label class="f"><span>Motivo</span><select id="mvMotivo"></select></label>
+      <label class="f"><span id="mvDestL">Para quem / setor</span><input type="text" id="mvDest" list="lDest" maxlength="80"></label>
+    </div>
+    <label class="f"><span>Documento / nota fiscal</span><input type="text" id="mvDoc" maxlength="60" placeholder="Opcional"></label>
+    <label class="f"><span>Observação</span><textarea id="mvObs" maxlength="500"></textarea></label>
+    <div class="err" id="mvErr" hidden></div>
+    <div class="dlg-acts">
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn primary" type="submit" id="mvSalvar">Registrar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Diálogo: nova externa -->
+<dialog id="dExt" class="wide">
+  <form id="fExt" method="dialog">
+    <h2>Nova externa</h2>
+    <div class="grid2">
+      <label class="f" style="grid-column: 1 / -1"><span>Nome da externa *</span><input type="text" id="xNome" required maxlength="100" placeholder="Ex.: Gravação Av. Paulista"></label>
+      <label class="f"><span>Local / endereço</span><input type="text" id="xDestino" maxlength="120"></label>
+      <label class="f"><span>Responsável</span><input type="text" id="xResp" list="lDest" maxlength="80"></label>
+      <label class="f"><span>Data de saída *</span><input type="date" id="xSaida" required></label>
+      <label class="f"><span>Retorno previsto</span><input type="date" id="xRet"></label>
+    </div>
+    <div class="f"><span>Equipamentos *</span>
+      <input type="search" id="xBusca" placeholder="Buscar item, local ou categoria">
+      <div id="xItens" class="pick"></div>
+      <div class="hint" id="xResumo"></div>
+    </div>
+    <div class="f" id="xFotosW"><span>Fotos dos equipamentos</span>
+      <label class="btn sm" style="justify-self:start">+ Adicionar fotos<input type="file" id="xFotos" accept="image/*" multiple hidden></label>
+      <div id="xPrev" class="thumbs"></div>
+    </div>
+    <label class="f"><span>Observação</span><textarea id="xObs" maxlength="500"></textarea></label>
+    <div class="err" id="xErr" hidden></div>
+    <div class="dlg-acts">
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn primary" type="submit" id="xSalvar">Registrar saída</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Diálogo: ver externa -->
+<dialog id="dExtV" class="wide">
+  <form id="fExtV" method="dialog">
+    <div style="display:flex;gap:10px;align-items:start;flex-wrap:wrap"><h2 id="vT" style="margin-right:auto"></h2><span id="vSt"></span></div>
+    <div class="hint" id="vMeta"></div>
+    <div class="tw" style="border:1px solid var(--line);border-radius:4px"><table>
+      <thead><tr><th>Item</th><th class="n">Saiu</th><th class="n">Voltou</th><th class="n">Pendente</th><th class="n" id="vRetH">Retornar agora</th></tr></thead>
+      <tbody id="vBody"></tbody>
+    </table></div>
+    <label class="f" id="vDataW"><span>Data do retorno</span><input type="date" id="vData"></label>
+    <div class="f"><span>Fotos</span>
+      <div id="vFotos" class="thumbs"></div>
+      <label class="btn sm" id="vAddW" style="justify-self:start">+ Adicionar fotos<input type="file" id="vAdd" accept="image/*" multiple hidden></label>
+      <div class="hint" id="vFotoSt" hidden></div>
+    </div>
+    <div class="hint" id="vObs"></div>
+    <div class="err" id="vErr" hidden></div>
+    <div class="dlg-acts">
+      <button class="btn" type="button" data-close>Fechar</button>
+      <button class="btn primary" type="button" id="vRetBtn">Registrar retorno</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Diálogo: concluir checkup -->
+<dialog id="dCkFim">
+  <form method="dialog">
+    <h2>Concluir checkup</h2>
+    <p id="ckFimMsg" style="margin:0"></p>
+    <div id="ckFimDif"></div>
+    <label class="check" id="ckAjW"><input type="checkbox" id="ckAj" checked> Ajustar o estoque para as quantidades encontradas</label>
+    <div class="err" id="ckErr" hidden></div>
+    <div class="dlg-acts">
+      <button class="btn" type="button" data-close>Voltar</button>
+      <button class="btn primary" type="button" id="ckSalvar">Salvar checkup</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Diálogo: ver checkup -->
+<dialog id="dCkV" class="wide">
+  <form method="dialog">
+    <div style="display:flex;gap:10px;align-items:start;flex-wrap:wrap"><h2 id="ckvT" style="margin-right:auto"></h2><span id="ckvSt"></span></div>
+    <div class="hint" id="ckvMeta"></div>
+    <div class="tw" style="border:1px solid var(--line);border-radius:4px"><table>
+      <thead><tr><th>Item</th><th class="n">Esperado</th><th class="n">Encontrado</th><th class="n">Diferença</th><th>Observação</th></tr></thead>
+      <tbody id="ckvBody"></tbody>
+    </table></div>
+    <div class="dlg-acts"><button class="btn" type="button" data-close>Fechar</button></div>
+  </form>
+</dialog>
+
+<!-- Diálogo: confirmação -->
+<dialog id="dConf">
+  <form method="dialog">
+    <h2 id="cT">Confirmar</h2>
+    <p id="cMsg" style="margin:0"></p>
+    <div class="dlg-acts">
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn danger" type="button" id="cOk">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<datalist id="lCat"></datalist><datalist id="lLocal"></datalist><datalist id="lDest"></datalist>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const LOCAIS_PADRAO = ["Studio 01", "Studio 02", "Studio Missão"];
+const S = { isAdm: false, ck: [], loadedC: false, ext: [], loadedX: false, assets: null, locais: LOCAIS_PADRAO.slice(), db: null, user: null, downloads: null, uid: null, canWrite: true, itens: new Map(), movs: [], names: {}, loadedI: false, loadedM: false };
+const MOTIVOS = {
+  entrada: ["Compra", "Retorno de externa", "Devolução", "Doação", "Transferência recebida", "Outro"],
+  saida: ["Em externa", "Entrega a colaborador", "Entrega a setor", "Empréstimo", "Descarte", "Perda / dano", "Outro"],
+  ajuste: ["Contagem física", "Correção de lançamento", "Outro"]
+};
+const UN = { un: "un", cx: "cx", pct: "pct", par: "par", m: "m", rolo: "rolo", kg: "kg" };
+const TIPO_L = { entrada: "Entrada", saida: "Saída", ajuste: "Ajuste" };
+
+const today = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+const monthStart = () => today().slice(0, 8) + "01";
+const fmtD = s => s ? s.slice(8, 10) + "/" + s.slice(5, 7) + "/" + s.slice(0, 4) : "";
+const fmtN = n => Number(n || 0).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const delta = m => m.tipo === "entrada" ? +m.qtd : m.tipo === "saida" ? -m.qtd : +m.qtd;
+
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+
+// ---------- cálculos ----------
+function saldo(itemId, ate) {
+  let s = 0;
+  for (const m of S.movs) if (m.itemId === itemId && (!ate || m.data <= ate)) s += delta(m);
+  return s;
+}
+function sortedMovs(list) {
+  return [...list].sort((a, b) => (b.data || "").localeCompare(a.data || "") || (b.criadoEm || "").localeCompare(a.criadoEm || ""));
+}
+function externa(itemId) {
+  let n = 0;
+  for (const m of S.movs) if (m.itemId === itemId) { if (m.tipo === "saida" && m.motivo === "Em externa") n += +m.qtd; else if (m.tipo === "entrada" && m.motivo === "Retorno de externa") n -= +m.qtd; }
+  return Math.max(0, n);
+}
+const SORT = { e: { k: "nome", d: 1 }, m: { k: "data", d: -1 } };
+function markSort(sel, st) { document.querySelectorAll(sel + " th[data-sort]").forEach(th => { if (th.dataset.sort === st.k) th.setAttribute("aria-sort", st.d > 0 ? "ascending" : "descending"); else th.removeAttribute("aria-sort"); }); }
+function bindSort(sel, st, fn) {
+  const h = document.querySelector(sel);
+  h.querySelectorAll("th[data-sort]").forEach(th => { th.tabIndex = 0; th.title = "Ordenar"; });
+  const go = th => { const k = th.dataset.sort; if (st.k === k) st.d = -st.d; else { st.k = k; st.d = ["s", "minimo", "qtd", "data"].includes(k) ? -1 : 1; } fn(); };
+  h.addEventListener("click", e => { const th = e.target.closest("th[data-sort]"); if (th) go(th); });
+  h.addEventListener("keydown", e => { const th = e.target.closest("th[data-sort]"); if (th && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); go(th); } });
+}
+function itemNome(id) { const it = S.itens.get(id); return it ? it.nome + (it.local ? " (" + it.local + ")" : "") : "(item removido)"; }
+function situacao(it, s) {
+  if (it.arquivado) return ["off", "Arquivado"];
+  if (s <= 0) return ["zero", "Zerado"];
+  if (it.minimo > 0 && s < it.minimo) return ["low", "Abaixo do mínimo"];
+  return ["ok", "Normal"];
+}
+function userName(id) { return S.names[id] || (id && id === S.uid ? "Você" : "—"); }
+async function resolveNames() {
+  if (!S.user || !S.user.profiles) return;
+  const ids = [...new Set([...S.movs, ...S.ck].map(m => m.usuario).filter(Boolean))].filter(id => !(id in S.names));
+  if (!ids.length) return;
+  try {
+    const ps = await S.user.profiles(ids);
+    for (const id of ids) S.names[id] = (ps && ps[id] && ps[id].name) || (id === S.uid ? "Você" : "Usuário");
+    renderMovs(); if (currentView() === "relatorios") renderReport(); if (currentView() === "checkup") renderCk(false);
+  } catch {}
+}
+
+// ---------- listas auxiliares ----------
+function refreshLists() {
+  const cats = new Set(), locs = new Set(), dests = new Set();
+  for (const it of S.itens.values()) { if (it.categoria) cats.add(it.categoria); if (it.local) locs.add(it.local); }
+  for (const m of S.movs) if (m.destino) dests.add(m.destino);
+  const fill = (el, set) => { el.innerHTML = [...set].sort((a, b) => a.localeCompare(b, "pt-BR")).map(v => `<option value="${esc(v)}"></option>`).join(""); };
+  fill($("#lCat"), cats); fill($("#lLocal"), locs); fill($("#lDest"), dests);
+  const allLocs = [...S.locais, ...[...locs].filter(l => !S.locais.includes(l)).sort((a, b) => a.localeCompare(b, "pt-BR"))];
+  for (const sel of [$("#eLoc"), $("#rLoc"), $("#ckLoc")]) {
+    const v = sel.value;
+    sel.innerHTML = `<option value="">Todos</option>` + allLocs.map(l => `<option>${esc(l)}</option>`).join("");
+    sel.value = allLocs.includes(v) ? v : "";
+  }
+  for (const sel of [$("#eCat"), $("#rCat")]) {
+    const v = sel.value;
+    sel.innerHTML = `<option value="">Todas</option>` + [...cats].sort((a, b) => a.localeCompare(b, "pt-BR")).map(c => `<option>${esc(c)}</option>`).join("");
+    sel.value = [...cats].includes(v) ? v : "";
+  }
+  const rv = $("#rItem").value;
+  const its = [...S.itens.entries()].sort((a, b) => a[1].nome.localeCompare(b[1].nome, "pt-BR"));
+  $("#rItem").innerHTML = `<option value="">Todos</option>` + its.map(([id, it]) => `<option value="${esc(id)}">${esc(it.nome)}${it.local ? " — " + esc(it.local) : ""}</option>`).join("");
+  $("#rItem").value = S.itens.has(rv) ? rv : "";
+}
+
+// ---------- aba Estoque ----------
+function renderEstoque() {
+  const loc = $("#eLoc").value;
+  const busca = norm($("#eBusca").value), cat = $("#eCat").value, sit = $("#eSit").value, arq = $("#eArq").checked;
+  const ativos = [...S.itens.entries()].filter(([, it]) => !it.arquivado);
+  let un = 0, low = 0;
+  for (const [id, it] of ativos) { const s = saldo(id); un += Math.max(0, s); if (it.minimo > 0 && s < it.minimo) low++; }
+  const ms = monthStart();
+  $("#kItens").textContent = fmtN(ativos.length);
+  $("#kUn").textContent = fmtN(un);
+  $("#kLow").textContent = fmtN(low);
+  $("#kMes").textContent = fmtN(S.movs.filter(m => m.data >= ms).length);
+
+  const rows = [...S.itens.entries()]
+    .filter(([, it]) => arq || !it.arquivado)
+    .filter(([, it]) => !cat || it.categoria === cat)
+    .filter(([, it]) => !loc || (it.local || "") === loc)
+    .filter(([, it]) => !busca || norm(it.nome + " " + (it.categoria || "") + " " + (it.local || "")).includes(busca))
+    .map(([id, it]) => ({ id, it, s: saldo(id), ext: externa(id) }))
+    .filter(r => !sit || (sit === "ext" ? r.ext > 0 : sit === "zero" ? r.s <= 0 : (r.it.minimo > 0 && r.s < r.it.minimo)))
+    .sort((a, b) => {
+      const k = SORT.e.k, d = SORT.e.d;
+      const rank = r => r.ext > 0 ? 3 : ({ zero: 0, low: 1, ok: 2, off: 4 })[situacao(r.it, r.s)[0]];
+      const v = r => k === "s" ? r.s : k === "minimo" ? (r.it.minimo || 0) : k === "sit" ? rank(r) : (r.it[k] || "");
+      const x = v(a), y = v(b);
+      const c = typeof x === "number" ? x - y : String(x).localeCompare(String(y), "pt-BR", { sensitivity: "base" });
+      return c * d || a.it.nome.localeCompare(b.it.nome, "pt-BR");
+    });
+  markSort("#eHead", SORT.e);
+
+  $("#eEmpty").hidden = !(S.loadedI && S.itens.size === 0);
+  const tb = $("#eBody");
+  if (!S.loadedI) { tb.innerHTML = `<tr><td colspan="7" class="status">Carregando estoque…</td></tr>`; return; }
+  if (S.itens.size && !rows.length) { tb.innerHTML = `<tr><td colspan="7" class="status">Nenhum item corresponde aos filtros.</td></tr>`; return; }
+  tb.innerHTML = rows.map(({ id, it, s, ext }) => {
+    let [cls, lbl] = situacao(it, s);
+    const extPill = ext > 0 ? `<span class="pill ext">Em externa · ${fmtN(ext)}</span>` : "";
+    const sitHtml = ext > 0 && cls === "zero" ? extPill : `<span class="pill ${cls}">${lbl}</span>${extPill ? " " + extPill : ""}`;
+    const w = S.canWrite && !it.arquivado;
+    return `<tr>
+      <td><div>${esc(it.nome)}</div>${it.obs ? `<div class="sub">${esc(it.obs)}</div>` : ""}</td>
+      <td>${esc(it.categoria || "—")}</td>
+      <td>${esc(it.local || "—")}</td>
+      <td class="n"><b>${fmtN(s)}</b></td>
+      <td class="n">${it.minimo ? fmtN(it.minimo) : "—"}</td>
+      <td>${sitHtml}</td>
+      <td class="acts">${S.isAdm ? `<button class="btn sm" data-edit="${esc(id)}">Editar</button><button class="btn sm danger" data-delitem="${esc(id)}">Excluir</button>` : ""}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ---------- aba Movimentações ----------
+function renderMovs() {
+  const de = $("#mDe").value, ate = $("#mAte").value, tipo = $("#mTipo").value, busca = norm($("#mBusca").value);
+  const base = sortedMovs(S.movs.filter(m =>
+    (!de || m.data >= de) && (!ate || m.data <= ate) && (!tipo || m.tipo === tipo) &&
+    (!busca || norm(itemNome(m.itemId) + " " + (m.destino || "") + " " + (m.motivo || "") + " " + (m.doc || "") + " " + (m.obs || "")).includes(busca))));
+  const mk = SORT.m.k, md = SORT.m.d;
+  const mv = m => mk === "data" ? (m.data || "") + (m.criadoEm || "") : mk === "qtd" ? delta(m) : mk === "item" ? itemNome(m.itemId) : mk === "tipo" ? TIPO_L[m.tipo] || "" : mk === "usuario" ? userName(m.usuario) : (m[mk] || "");
+  const list = base.map((m, i) => [m, i]).sort(([a, i], [b, j]) => { const x = mv(a), y = mv(b); const c = typeof x === "number" ? x - y : String(x).localeCompare(String(y), "pt-BR", { sensitivity: "base" }); return c * md || i - j; }).map(p => p[0]);
+  markSort("#mHead", SORT.m);
+  const tb = $("#mBody");
+  if (!S.loadedM) { tb.innerHTML = `<tr><td colspan="8" class="status">Carregando movimentações…</td></tr>`; $("#mEmpty").hidden = true; return; }
+  $("#mEmpty").hidden = list.length > 0;
+  tb.innerHTML = list.map(m => {
+    const d = delta(m), cls = m.tipo === "entrada" ? "q-in" : m.tipo === "saida" ? "q-out" : "q-adj";
+    const un = UN[S.itens.get(m.itemId)?.unidade] || "un";
+    return `<tr>
+      <td class="num">${fmtD(m.data)}</td>
+      <td><span class="pill ${m.tipo}">${TIPO_L[m.tipo] || m.tipo}</span></td>
+      <td>${esc(itemNome(m.itemId))}${m.doc ? `<div class="sub">Doc.: ${esc(m.doc)}</div>` : ""}</td>
+      <td class="n ${cls}">${d > 0 ? "+" : ""}${fmtN(d)} <span class="sub">${esc(un)}</span></td>
+      <td>${esc(m.destino || "—")}</td>
+      <td>${esc(m.motivo || "—")}${m.obs ? `<div class="sub">${esc(m.obs)}</div>` : ""}</td>
+      <td>${esc(userName(m.usuario))}</td>
+      <td class="acts">${S.isAdm ? `<button class="btn sm" data-del="${esc(m.id)}">Excluir</button>` : ""}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ---------- Relatórios ----------
+let R = { titulo: "", meta: "", head: [], rows: [], foot: null, num: [] };
+function filtItem(id) {
+  const cat = $("#rCat").value, it = $("#rItem").value, loc = $("#rLoc").value, x = S.itens.get(id);
+  return (!it || id === it) && (!cat || (x && x.categoria === cat)) && (!loc || (x && (x.local || "") === loc));
+}
+function buildReport() {
+  const tipo = $("#rTipo").value, de = $("#rDe").value, ate = $("#rAte").value || today();
+  const cat = $("#rCat").value, itSel = $("#rItem").value, locSel = $("#rLoc").value;
+  const filtros = [locSel && `local ${locSel}`, cat && `categoria ${cat}`, itSel && `item ${itemNome(itSel)}`].filter(Boolean).join(" · ");
+  const per = de ? `de ${fmtD(de)} a ${fmtD(ate)}` : `até ${fmtD(ate)}`;
+  const inPer = m => (!de || m.data >= de) && m.data <= ate;
+  const itensF = [...S.itens.entries()].filter(([id]) => filtItem(id)).sort((a, b) => a[1].nome.localeCompare(b[1].nome, "pt-BR"));
+  const r = { head: [], rows: [], foot: null, num: [] };
+
+  if (tipo === "periodo") {
+    r.titulo = "Movimentações no período";
+    r.head = ["Data", "Tipo", "Item", "Quantidade", "Unidade", "Destino / origem", "Motivo", "Documento", "Lançado por", "Observação"];
+    r.num = [3];
+    const list = sortedMovs(S.movs.filter(m => inPer(m) && filtItem(m.itemId))).reverse();
+    r.rows = list.map(m => [fmtD(m.data), TIPO_L[m.tipo], itemNome(m.itemId), delta(m), UN[S.itens.get(m.itemId)?.unidade] || "un", m.destino || "", m.motivo || "", m.doc || "", userName(m.usuario), m.obs || ""]);
+    const e = list.filter(m => m.tipo === "entrada").reduce((a, m) => a + +m.qtd, 0);
+    const s = list.filter(m => m.tipo === "saida").reduce((a, m) => a + +m.qtd, 0);
+    r.meta = `${per}${filtros ? " · " + filtros : ""} · ${list.length} lançamentos · entradas ${fmtN(e)} · saídas ${fmtN(s)}`;
+  } else if (tipo === "resumo") {
+    r.titulo = "Resumo por item no período";
+    r.head = ["Item", "Categoria", "Saldo inicial", "Entradas", "Saídas", "Ajustes", "Saldo final"];
+    r.num = [2, 3, 4, 5, 6];
+    const dIni = de ? prevDay(de) : null;
+    const tot = [0, 0, 0, 0, 0];
+    for (const [id, it] of itensF) {
+      const ms = S.movs.filter(m => m.itemId === id && inPer(m));
+      const ini = dIni ? saldo(id, dIni) : 0;
+      const e = ms.filter(m => m.tipo === "entrada").reduce((a, m) => a + +m.qtd, 0);
+      const s = ms.filter(m => m.tipo === "saida").reduce((a, m) => a + +m.qtd, 0);
+      const aj = ms.filter(m => m.tipo === "ajuste").reduce((a, m) => a + +m.qtd, 0);
+      const fim = saldo(id, ate);
+      if (it.arquivado && !ms.length && !fim) continue;
+      r.rows.push([it.nome, it.categoria || "", ini, e, s, aj, fim]);
+      [ini, e, s, aj, fim].forEach((v, i) => tot[i] += v);
+    }
+    r.foot = ["Total", "", ...tot];
+    r.meta = `${per}${filtros ? " · " + filtros : ""}`;
+  } else if (tipo === "saldo") {
+    r.titulo = `Saldo do estoque em ${fmtD(ate)}`;
+    r.head = ["Item", "Categoria", "Local", "Unidade", "Saldo", "Mínimo", "Situação"];
+    r.num = [4, 5];
+    let tot = 0;
+    for (const [id, it] of itensF) {
+      const s = saldo(id, ate);
+      if (it.arquivado && !s) continue;
+      tot += s;
+      r.rows.push([it.nome, it.categoria || "", it.local || "", UN[it.unidade] || "un", s, it.minimo || 0, situacao({ ...it, arquivado: false }, s)[1]]);
+    }
+    r.foot = ["Total", "", "", "", tot, "", ""];
+    r.meta = `Posição considerando todos os lançamentos até ${fmtD(ate)}${filtros ? " · " + filtros : ""}`;
+  } else if (tipo === "consumo") {
+    r.titulo = "Saídas por destino";
+    r.head = ["Destino", "Item", "Unidade", "Quantidade", "Lançamentos"];
+    r.num = [3, 4];
+    const g = new Map();
+    for (const m of S.movs) {
+      if (m.tipo !== "saida" || !inPer(m) || !filtItem(m.itemId)) continue;
+      const k = (m.destino || "(sem destino)") + "\u0000" + m.itemId;
+      const o = g.get(k) || { dest: m.destino || "(sem destino)", item: itemNome(m.itemId), un: UN[S.itens.get(m.itemId)?.unidade] || "un", q: 0, n: 0 };
+      o.q += +m.qtd; o.n++; g.set(k, o);
+    }
+    const arr = [...g.values()].sort((a, b) => a.dest.localeCompare(b.dest, "pt-BR") || b.q - a.q);
+    r.rows = arr.map(o => [o.dest, o.item, o.un, o.q, o.n]);
+    r.foot = ["Total", "", "", arr.reduce((a, o) => a + o.q, 0), arr.reduce((a, o) => a + o.n, 0)];
+    r.meta = `${per}${filtros ? " · " + filtros : ""}`;
+  } else {
+    r.titulo = "Itens abaixo do mínimo";
+    r.head = ["Item", "Categoria", "Local", "Unidade", "Saldo atual", "Mínimo", "Repor"];
+    r.num = [4, 5, 6];
+    for (const [id, it] of itensF) {
+      if (it.arquivado || !(it.minimo > 0)) continue;
+      const s = saldo(id);
+      if (s < it.minimo) r.rows.push([it.nome, it.categoria || "", it.local || "", UN[it.unidade] || "un", s, it.minimo, it.minimo - s]);
+    }
+    r.meta = `Posição atual (${fmtD(today())})${filtros ? " · " + filtros : ""}`;
+  }
+  if (r.foot && !r.rows.length) r.foot = null;
+  return r;
+}
+function prevDay(s) { const d = new Date(s + "T12:00:00"); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); }
+function renderReport() {
+  const tipo = $("#rTipo").value;
+  $("#rDeW").hidden = tipo === "saldo" || tipo === "minimo";
+  $("#rAteW").hidden = tipo === "minimo";
+  $("#rAteL").textContent = tipo === "saldo" ? "Data" : "Até";
+  if (!S.loadedI || !S.loadedM) { $("#rTitulo").textContent = "Carregando dados…"; return; }
+  R = buildReport();
+  $("#rTitulo").textContent = R.titulo;
+  $("#rMeta").textContent = R.meta;
+  const t = $("#rTable"), isN = i => R.num.includes(i);
+  const cell = (v, i, tag = "td") => `<${tag}${isN(i) ? ' class="n"' : ""}>${isN(i) && typeof v === "number" ? fmtN(v) : esc(v)}</${tag}>`;
+  t.tHead.innerHTML = `<tr>${R.head.map((h, i) => `<th${isN(i) ? ' class="n"' : ""}>${esc(h)}</th>`).join("")}</tr>`;
+  t.tBodies[0].innerHTML = R.rows.map(r => `<tr>${r.map((v, i) => cell(v, i)).join("")}</tr>`).join("");
+  t.tFoot.innerHTML = R.foot ? `<tr>${R.foot.map((v, i) => cell(v, i)).join("")}</tr>` : "";
+  $("#rEmpty").hidden = R.rows.length > 0;
+  $("#rXlsx").disabled = $("#rPdf").disabled = !R.rows.length;
+}
+function fileBase() { return (R.titulo || "relatorio").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w]+/g, "-").replace(/^-|-$/g, "").toLowerCase() + "-" + today(); }
+async function saveFile(filename, data) {
+  if (!S.downloads) { toast("Download não disponível nesta visualização."); return; }
+  try { await S.downloads.save({ filename, data }); }
+  catch (e) { if (e && e.code !== "declined") toast("Não foi possível salvar o arquivo."); }
+}
+async function exportXlsx() {
+  const aoa = [[R.titulo], [R.meta], [], R.head, ...R.rows]; if (R.foot) aoa.push(R.foot);
+  if (window.XLSX) {
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws["!cols"] = R.head.map((h, i) => ({ wch: Math.min(40, Math.max(h.length, ...R.rows.map(r => String(r[i] ?? "").length)) + 2) }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+    const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    await saveFile(fileBase() + ".xlsx", new Blob([buf]));
+  } else {
+    const csv = "﻿" + aoa.map(r => r.map(v => typeof v === "number" ? String(v).replace(".", ",") : `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\r\n");
+    await saveFile(fileBase() + ".csv", csv);
+  }
+}
+async function exportPdf() {
+  const J = window.jspdf && window.jspdf.jsPDF;
+  if (!J) { toast("O gerador de PDF não carregou. Use Exportar Excel."); return; }
+  const doc = new J({ orientation: R.head.length > 6 ? "landscape" : "portrait", unit: "pt", format: "a4" });
+  doc.setFontSize(15); doc.text(R.titulo, 40, 44);
+  doc.setFontSize(9); doc.setTextColor(90); doc.text(doc.splitTextToSize(R.meta, doc.internal.pageSize.getWidth() - 80), 40, 62);
+  doc.text("Emitido em " + new Date().toLocaleString("pt-BR"), 40, 78);
+  const f = (v, i) => R.num.includes(i) && typeof v === "number" ? fmtN(v) : String(v ?? "");
+  const colStyles = {}; R.num.forEach(i => colStyles[i] = { halign: "right" });
+  if (typeof doc.autoTable === "function") {
+    doc.autoTable({ startY: 90, head: [R.head], body: R.rows.map(r => r.map(f)), foot: R.foot ? [R.foot.map(f)] : undefined,
+      styles: { fontSize: 8.5, cellPadding: 4 }, headStyles: { fillColor: [14, 42, 110] }, footStyles: { fillColor: [234, 238, 240], textColor: 20 }, columnStyles: colStyles, margin: { left: 40, right: 40 } });
+  } else {
+    let y = 100; doc.setTextColor(20);
+    for (const r of [R.head, ...R.rows]) { doc.text(r.map(f).join("   |   ").slice(0, 160), 40, y); y += 14; if (y > 800) { doc.addPage(); y = 50; } }
+  }
+  await saveFile(fileBase() + ".pdf", doc.output("blob"));
+}
+
+// ---------- diálogos ----------
+let editId = null;
+function openItem(id) {
+  editId = id || null;
+  const it = id ? S.itens.get(id) : null;
+  $("#dItemT").textContent = it ? "Editar item" : "Novo item";
+  $("#iNome").value = it?.nome || ""; $("#iCat").value = it?.categoria || ""; $("#iUn").value = it?.unidade || "un";
+  const cur = it ? (it.local || "") : "A definir";
+  const opts = ["A definir", ...S.locais.filter(l => l !== "A definir")];
+  if (cur && !opts.includes(cur)) opts.push(cur);
+  $("#iLocal").innerHTML = opts.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join("") + `<option value="">Sem local</option>`;
+  $("#iMin").value = it?.minimo ?? 0; $("#iLocal").value = cur; $("#iObs").value = it?.obs || ""; $("#iSaldo").value = 0;
+  $("#iSaldo").value = it ? saldo(id) : 0;
+  $("#iSaldoHint").hidden = !it;
+  $("#iSaldoL").textContent = it ? "Quantidade no local" : "Quantidade";
+  $("#iSitW").hidden = !it;
+  const ex = it ? externa(id) : 0;
+  $("#iSit").value = ex > 0 ? "ext" : "local";
+  $("#iExt").value = ex || "";
+  $("#iExtDest").value = "";
+  syncSit();
+  $("#iArq").hidden = !it; $("#iArq").textContent = it?.arquivado ? "Reativar" : "Arquivar";
+  $("#iErr").hidden = true;
+  $("#dItem").showModal(); $("#iNome").focus();
+}
+async function saveItem(e) {
+  e.preventDefault();
+  const nome = $("#iNome").value.trim();
+  if (!nome) return showErr("#iErr", "Informe o nome do item.");
+  const localV = $("#iLocal").value.trim();
+  const dup = [...S.itens.entries()].find(([id, it]) => id !== editId && norm(it.nome) === norm(nome) && norm(it.local) === norm(localV));
+  if (dup) return showErr("#iErr", "Já existe um item com esse nome neste local.");
+  const body = { nome, categoria: $("#iCat").value.trim(), unidade: $("#iUn").value, minimo: Math.max(0, +$("#iMin").value || 0), local: $("#iLocal").value.trim(), obs: $("#iObs").value.trim() };
+  const btn = $("#iSalvar"); btn.disabled = true;
+  try {
+    if (editId) {
+      const nq = Math.max(0, +$("#iSaldo").value || 0), d = nq - saldo(editId);
+      const curExt = externa(editId), wantExt = $("#iSit").value === "ext" ? Math.max(0, +$("#iExt").value || 0) : 0, d2 = wantExt - curExt;
+      if ($("#iSit").value === "ext" && wantExt <= 0) { btn.disabled = false; return showErr("#iErr", "Informe quantas unidades estão em externa."); }
+      if (d2 > nq) { btn.disabled = false; return showErr("#iErr", `Só há ${fmtN(nq)} no local para mandar para externa.`); }
+      await S.db.doc("itens/" + editId).update(body);
+      if (d !== 0) await S.db.collection("movs").doc().set({ itemId: editId, tipo: "ajuste", qtd: d, contagem: nq, data: today(), motivo: "Correção de lançamento", destino: "", doc: "", obs: "Quantidade alterada pela edição do item", usuario: S.uid || "", criadoEm: new Date().toISOString() });
+      if (d2 !== 0) await S.db.collection("movs").doc().set({ itemId: editId, tipo: d2 > 0 ? "saida" : "entrada", qtd: Math.abs(d2), data: today(), motivo: d2 > 0 ? "Em externa" : "Retorno de externa", destino: d2 > 0 ? $("#iExtDest").value.trim() : "", doc: "", obs: "Situação alterada pela edição do item", usuario: S.uid || "", criadoEm: new Date(Date.now() + 1).toISOString() });
+      toast("Item atualizado");
+    }
+    else {
+      const ref = S.db.collection("itens").doc();
+      await ref.set({ ...body, arquivado: false, criadoEm: new Date().toISOString() });
+      const ini = Math.max(0, +$("#iSaldo").value || 0);
+      if (ini > 0) await S.db.collection("movs").doc().set({ itemId: ref.id, tipo: "entrada", qtd: ini, data: today(), motivo: "Saldo inicial", destino: "", doc: "", obs: "", usuario: S.uid || "", criadoEm: new Date().toISOString() });
+      toast("Item cadastrado");
+    }
+    $("#dItem").close();
+  } catch (err) { handleWriteErr(err, "#iErr"); }
+  finally { btn.disabled = false; }
+}
+async function toggleArquivo() {
+  const it = S.itens.get(editId); if (!it) return;
+  try { await S.db.doc("itens/" + editId).update({ arquivado: !it.arquivado }); toast(it.arquivado ? "Item reativado" : "Item arquivado"); $("#dItem").close(); }
+  catch (err) { handleWriteErr(err, "#iErr"); }
+}
+
+function syncSit() {
+  const ext = $("#iSit").value === "ext";
+  $("#iExtW").hidden = !ext; $("#iExtDestW").hidden = !ext;
+  if (ext && !(+$("#iExt").value > 0)) $("#iExt").value = Math.max(1, +$("#iSaldo").value || 0);
+}
+function mvTipo() { return document.querySelector('input[name="mvTipo"]:checked').value; }
+function openMov(tipo, itemId, motivo, qtd) {
+  const ativos = [...S.itens.entries()].filter(([, it]) => !it.arquivado).sort((a, b) => a[1].nome.localeCompare(b[1].nome, "pt-BR"));
+  if (!ativos.length) { toast("Cadastre um item antes de lançar movimentações."); openItem(); return; }
+  $("#mvItem").innerHTML = ativos.map(([id, it]) => `<option value="${esc(id)}">${esc(it.nome)}${it.local ? " — " + esc(it.local) : ""}</option>`).join("");
+  if (itemId && S.itens.has(itemId)) $("#mvItem").value = itemId;
+  document.querySelector(`input[name="mvTipo"][value="${tipo}"]`).checked = true;
+  $("#mvQtd").value = ""; $("#mvData").value = today(); $("#mvDest").value = ""; $("#mvDoc").value = ""; $("#mvObs").value = "";
+  $("#mvErr").hidden = true;
+  $("#mvMotivo").value = "";
+  syncMovForm();
+  if (motivo) $("#mvMotivo").value = motivo;
+  if (qtd) $("#mvQtd").value = qtd;
+  $("#dMov").showModal(); $("#mvQtd").focus();
+}
+function syncMovForm() {
+  const t = mvTipo(), id = $("#mvItem").value, it = S.itens.get(id);
+  const prev = $("#mvMotivo").value;
+  $("#mvMotivo").innerHTML = MOTIVOS[t].map(m => `<option>${m}</option>`).join("");
+  if (MOTIVOS[t].includes(prev)) $("#mvMotivo").value = prev;
+  $("#mvQtdL").textContent = t === "ajuste" ? "Quantidade contada *" : "Quantidade *";
+  $("#mvDestL").textContent = t === "entrada" ? "Fornecedor / origem" : t === "saida" ? "Para quem / setor" : "Responsável pela contagem";
+  const s = it ? saldo(id) : 0, un = UN[it?.unidade] || "un";
+  $("#mvSaldo").textContent = it ? (t === "ajuste" ? `Saldo no sistema: ${fmtN(s)} ${un}. Informe quanto há fisicamente; a diferença será lançada como ajuste.` : `Saldo atual: ${fmtN(s)} ${un}`) : "";
+  $("#mvSalvar").textContent = t === "entrada" ? "Registrar entrada" : t === "saida" ? "Registrar saída" : "Registrar ajuste";
+}
+async function saveMov(e) {
+  e.preventDefault();
+  const t = mvTipo(), id = $("#mvItem").value, q = +$("#mvQtd").value, data = $("#mvData").value;
+  if (!id) return showErr("#mvErr", "Escolha um item.");
+  if (!data) return showErr("#mvErr", "Informe a data.");
+  if (!(q >= 0) || $("#mvQtd").value === "") return showErr("#mvErr", "Informe a quantidade.");
+  let qtd = q;
+  if (t !== "ajuste" && q <= 0) return showErr("#mvErr", "A quantidade precisa ser maior que zero.");
+  if (t === "saida") {
+    const sNaData = saldo(id, data), sAtual = saldo(id);
+    if (q > sAtual || q > sNaData) return showErr("#mvErr", `Saldo insuficiente: há ${fmtN(Math.min(sAtual, sNaData))} disponíveis${data < today() ? " nessa data" : ""}.`);
+  }
+  if (t === "ajuste") {
+    qtd = q - saldo(id, data);
+    if (qtd === 0) return showErr("#mvErr", "A contagem confere com o sistema. Nenhum ajuste necessário.");
+  }
+  const btn = $("#mvSalvar"); btn.disabled = true;
+  try {
+    await S.db.collection("movs").doc().set({ itemId: id, tipo: t, qtd, data, motivo: $("#mvMotivo").value, destino: $("#mvDest").value.trim(), doc: $("#mvDoc").value.trim(), obs: $("#mvObs").value.trim(), usuario: S.uid || "", criadoEm: new Date().toISOString(), ...(t === "ajuste" ? { contagem: q } : {}) });
+    $("#dMov").close();
+    toast(t === "entrada" ? "Entrada registrada" : t === "saida" ? "Saída registrada" : "Ajuste registrado");
+  } catch (err) { handleWriteErr(err, "#mvErr"); }
+  finally { btn.disabled = false; }
+}
+function showErr(sel, msg) { const el = $(sel); el.textContent = msg; el.hidden = false; }
+function handleWriteErr(err, sel) {
+  const c = err && err.code;
+  if (c === "invalid_argument") { setWrite(false); showErr(sel, "Seu acesso não permite alterar o estoque."); }
+  else if (c === "quota_exceeded") showErr(sel, "O banco de dados atingiu o limite de registros.");
+  else showErr(sel, "Não foi possível salvar. Verifique a conexão e tente de novo.");
+}
+let confAction = null;
+function confirmar(titulo, msg, label, fn) { $("#cT").textContent = titulo; $("#cMsg").textContent = msg; $("#cOk").textContent = label; confAction = fn; $("#dConf").showModal(); }
+
+// ---------- externas ----------
+let xSel = new Map(), xPend = [], vId = null;
+function extInfo(x) {
+  const rows = (x.itens || []).map(r => {
+    const back = S.movs.filter(m => m.externaId === x.id && m.itemId === r.itemId && m.tipo === "entrada").reduce((a, m) => a + +m.qtd, 0);
+    return { ...r, back, pend: Math.max(0, r.qtd - back) };
+  });
+  const pend = rows.reduce((a, r) => a + r.pend, 0), back = rows.reduce((a, r) => a + r.back, 0), tot = rows.reduce((a, r) => a + r.qtd, 0);
+  const done = x.status === "concluida" || pend === 0;
+  const st = done ? ["done", "Concluída"] : (x.retornoPrevisto && x.retornoPrevisto < today()) ? ["late", "Atrasada"] : back > 0 ? ["part", "Retorno parcial"] : ["ext", "Em andamento"];
+  return { rows, pend, back, tot, done, st };
+}
+let foto = id => "/_blob/" + encodeURIComponent(id);
+function renderExt() {
+  const box = $("#xList");
+  if (S.db && !S.loadedX) { box.innerHTML = `<div class="status" style="padding:16px">Carregando externas…</div>`; $("#xEmpty").hidden = true; return; }
+  const f = $("#xSt").value;
+  const list = S.ext.map(x => ({ x, i: extInfo(x) }))
+    .filter(({ i }) => !f || (f === "abertas" ? !i.done : i.done))
+    .sort((a, b) => (b.x.dataSaida || "").localeCompare(a.x.dataSaida || "") || (b.x.criadoEm || "").localeCompare(a.x.criadoEm || ""));
+  $("#xEmptyT").textContent = f === "concluidas" ? "Nenhuma externa concluída" : f ? "Nenhuma externa em andamento" : "Nenhuma externa registrada";
+  $("#xEmpty").hidden = list.length > 0;
+  box.innerHTML = list.map(({ x, i }) => {
+    const nomes = i.rows.map(r => `${esc(S.itens.get(r.itemId)?.nome || "(item removido)")} ×${fmtN(r.qtd)}`);
+    const its = nomes.slice(0, 4).join(", ") + (nomes.length > 4 ? ` e mais ${nomes.length - 4}` : "");
+    const fotos = x.fotos || [];
+    const meta = [x.destino, "Saída " + fmtD(x.dataSaida), x.retornoPrevisto && "Retorno previsto " + fmtD(x.retornoPrevisto), x.responsavel && "Resp.: " + x.responsavel].filter(Boolean).map(esc).join(" · ");
+    return `<div class="xcard">
+      <div class="ph">${fotos.length ? `<img src="${foto(fotos[0])}" alt="" loading="lazy" onerror="this.remove()">` : "sem foto"}</div>
+      <div style="min-width:0"><h3>${esc(x.nome)}</h3><div class="meta">${meta}</div><div class="its">${its}</div>
+        <div class="meta">${fmtN(i.tot)} unidade${i.tot === 1 ? "" : "s"}${i.back && !i.done ? ` · ${fmtN(i.pend)} pendente${i.pend === 1 ? "" : "s"}` : ""}${fotos.length ? ` · ${fotos.length} foto${fotos.length > 1 ? "s" : ""}` : ""}</div></div>
+      <div class="side"><span class="pill ${i.st[0]}">${i.st[1]}</span><button class="btn sm" type="button" data-xopen="${esc(x.id)}">${!i.done && S.canWrite ? "Abrir / retorno" : "Abrir"}</button></div>
+    </div>`;
+  }).join("");
+}
+function openExt() {
+  if (![...S.itens.values()].some(it => !it.arquivado)) { toast("Cadastre itens antes de criar uma externa."); return; }
+  xSel = new Map(); xPend.forEach(p => URL.revokeObjectURL(p.url)); xPend = [];
+  ["#xNome", "#xDestino", "#xResp", "#xObs", "#xBusca", "#xRet"].forEach(s => $(s).value = "");
+  $("#xSaida").value = today();
+  $("#xFotosW").hidden = !S.assets;
+  $("#xErr").hidden = true;
+  renderPick(); renderPrev();
+  $("#dExt").showModal(); $("#xNome").focus();
+}
+function renderPick() {
+  const q = norm($("#xBusca").value);
+  const its = [...S.itens.entries()].filter(([, it]) => !it.arquivado)
+    .filter(([, it]) => !q || norm(it.nome + " " + (it.local || "") + " " + (it.categoria || "")).includes(q))
+    .sort((a, b) => a[1].nome.localeCompare(b[1].nome, "pt-BR") || (a[1].local || "").localeCompare(b[1].local || "", "pt-BR"));
+  $("#xItens").innerHTML = its.map(([id, it]) => {
+    const s = saldo(id), on = xSel.has(id), dis = s <= 0 && !on;
+    return `<label class="pick-row${dis ? " off" : ""}"><input type="checkbox" data-pid="${esc(id)}"${on ? " checked" : ""}${dis ? " disabled" : ""}>
+      <span>${esc(it.nome)}<small>${esc(it.local || "Sem local")}</small></span>
+      <span class="pd">${s <= 0 ? "sem unidades" : "disp. " + fmtN(s)}</span>
+      <input type="number" data-qid="${esc(id)}" min="1" max="${Math.max(1, s)}" step="1" value="${on ? xSel.get(id) : 1}"${on ? "" : " disabled"} aria-label="Quantidade de ${esc(it.nome)}"></label>`;
+  }).join("") || `<div class="status" style="padding:12px">Nenhum item encontrado.</div>`;
+  resumo();
+}
+function resumo() {
+  const n = [...xSel.values()].reduce((a, b) => a + b, 0), k = xSel.size;
+  $("#xResumo").textContent = k ? `${k} ${k > 1 ? "itens selecionados" : "item selecionado"} · ${fmtN(n)} unidade${n === 1 ? "" : "s"}` : "Marque os equipamentos que vão sair e ajuste a quantidade de cada um.";
+}
+function renderPrev() {
+  $("#xPrev").innerHTML = xPend.map((p, i) => `<span class="th"><img src="${p.url}" alt=""><button type="button" class="rm" data-rm="${i}" aria-label="Remover foto">×</button></span>`).join("");
+}
+async function shrink(file) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const b = await new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+    return b || file;
+  } catch { return file; }
+}
+async function uploadFotos(files) {
+  const ids = [];
+  for (const f of files) {
+    const b = await shrink(f);
+    const t = ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(b.type) ? b.type : "image/jpeg";
+    const r = await S.assets.upload(b, { type: t });
+    ids.push(r.id);
+  }
+  return ids;
+}
+function fotoErr(e) {
+  const c = e && e.code;
+  return c === "too_large" ? "Uma das fotos é grande demais (máximo 20 MB)."
+    : c === "unsupported_type" ? "Formato de foto não aceito. Use JPG, PNG ou WEBP (fotos HEIC do iPhone podem precisar ser convertidas)."
+    : c === "quota_or_state" ? "O espaço para fotos deste sistema acabou."
+    : c === "rate_limited" ? "Muitos envios seguidos. Espere um pouco e tente de novo."
+    : c === "not_granted" || c === "capability_disabled" ? "Seu acesso não permite enviar fotos."
+    : "Não foi possível enviar as fotos. Tente de novo.";
+}
+const DB_CODES = ["invalid_argument", "quota_exceeded", "unavailable", "resource_exhausted", "revoked"];
+async function saveExt(e) {
+  e.preventDefault();
+  const nome = $("#xNome").value.trim(), dataSaida = $("#xSaida").value, ret = $("#xRet").value;
+  if (!nome) return showErr("#xErr", "Dê um nome para a externa.");
+  if (!dataSaida) return showErr("#xErr", "Informe a data de saída.");
+  if (ret && ret < dataSaida) return showErr("#xErr", "O retorno previsto não pode ser antes da saída.");
+  if (!xSel.size) return showErr("#xErr", "Marque pelo menos um equipamento.");
+  for (const [id, q] of xSel) {
+    const disp = Math.min(saldo(id), saldo(id, dataSaida));
+    if (!(q >= 1)) return showErr("#xErr", `Informe a quantidade de ${itemNome(id)}.`);
+    if (q > disp) return showErr("#xErr", `${itemNome(id)}: só há ${fmtN(Math.max(0, disp))} disponível${disp === 1 ? "" : "is"}.`);
+  }
+  const btn = $("#xSalvar"); btn.disabled = true; btn.textContent = xPend.length ? "Enviando fotos…" : "Salvando…";
+  try {
+    const fotos = xPend.length && S.assets ? await uploadFotos(xPend.map(p => p.file)) : [];
+    btn.textContent = "Salvando…";
+    const ref = S.db.collection("externas").doc(), now = new Date().toISOString(), destino = $("#xDestino").value.trim();
+    await ref.set({ nome, destino, responsavel: $("#xResp").value.trim(), dataSaida, retornoPrevisto: ret, obs: $("#xObs").value.trim(),
+      itens: [...xSel].map(([itemId, qtd]) => ({ itemId, qtd })), fotos, status: "aberta", criadoEm: now, usuario: S.uid || "" });
+    for (const [itemId, qtd] of xSel)
+      await S.db.collection("movs").doc().set({ itemId, tipo: "saida", qtd, data: dataSaida, motivo: "Em externa", destino: nome, doc: "", obs: destino ? "Local: " + destino : "", usuario: S.uid || "", criadoEm: now, externaId: ref.id });
+    $("#dExt").close(); xPend.forEach(p => URL.revokeObjectURL(p.url)); xPend = [];
+    toast("Externa registrada");
+    if (currentView() !== "externas") location.hash = "#externas";
+  } catch (err) {
+    if (err && DB_CODES.includes(err.code)) handleWriteErr(err, "#xErr"); else showErr("#xErr", fotoErr(err));
+  } finally { btn.disabled = false; btn.textContent = "Registrar saída"; }
+}
+function openExtV(id) { vId = id; $("#vErr").hidden = true; $("#vFotoSt").hidden = true; $("#vData").value = today(); renderExtV(true); $("#dExtV").showModal(); }
+function renderExtV(fresh) {
+  const x = S.ext.find(e => e.id === vId); if (!x) { if ($("#dExtV").open) $("#dExtV").close(); return; }
+  const i = extInfo(x), canRet = S.canWrite && !i.done;
+  const keep = {}; if (!fresh) $$("#vBody [data-rid]").forEach(el => keep[el.dataset.rid] = el.value);
+  $("#vT").textContent = x.nome;
+  $("#vSt").innerHTML = `<span class="pill ${i.st[0]}">${i.st[1]}</span>`;
+  $("#vMeta").textContent = [x.destino, "Saída " + fmtD(x.dataSaida), x.retornoPrevisto && "Retorno previsto " + fmtD(x.retornoPrevisto), x.dataRetorno && "Retornou " + fmtD(x.dataRetorno), x.responsavel && "Responsável: " + x.responsavel].filter(Boolean).join(" · ");
+  $("#vRetH").hidden = !canRet; $("#vDataW").hidden = !canRet; $("#vRetBtn").hidden = !canRet;
+  $("#vBody").innerHTML = i.rows.map(r => `<tr><td>${esc(itemNome(r.itemId))}</td><td class="n">${fmtN(r.qtd)}</td><td class="n">${fmtN(r.back)}</td><td class="n">${fmtN(r.pend)}</td>${canRet ? `<td class="n">${r.pend > 0 ? `<input type="number" data-rid="${esc(r.itemId)}" min="0" max="${r.pend}" step="1" value="${esc(keep[r.itemId] ?? r.pend)}" style="width:80px;text-align:right" aria-label="Retornar ${esc(itemNome(r.itemId))}">` : "—"}</td>` : ""}</tr>`).join("");
+  const fotos = x.fotos || [];
+  $("#vFotos").innerHTML = fotos.length ? fotos.map(f => `<a class="th" href="${foto(f)}" target="_blank" rel="noopener"><img src="${foto(f)}" alt="Foto da externa" loading="lazy"></a>`).join("") : `<span class="hint">Nenhuma foto anexada.</span>`;
+  $("#vAddW").hidden = !(S.assets && S.canWrite);
+  $("#vObs").textContent = x.obs ? "Observação: " + x.obs : "";
+}
+async function retornoExt() {
+  const x = S.ext.find(e => e.id === vId); if (!x) return;
+  const i = extInfo(x), data = $("#vData").value || today();
+  if (data < x.dataSaida) return showErr("#vErr", "A data do retorno não pode ser antes da saída.");
+  const vals = i.rows.map(r => { const el = document.querySelector(`#vBody [data-rid="${CSS.escape(r.itemId)}"]`); return { r, q: el ? Math.max(0, Math.floor(+el.value || 0)) : 0 }; });
+  const bad = vals.find(v => v.q > v.r.pend); if (bad) return showErr("#vErr", `${itemNome(bad.r.itemId)}: só há ${fmtN(bad.r.pend)} pendente${bad.r.pend === 1 ? "" : "s"}.`);
+  const go = vals.filter(v => v.q > 0); if (!go.length) return showErr("#vErr", "Informe quantas unidades estão voltando.");
+  const btn = $("#vRetBtn"); btn.disabled = true;
+  try {
+    const now = new Date().toISOString();
+    for (const { r, q } of go) await S.db.collection("movs").doc().set({ itemId: r.itemId, tipo: "entrada", qtd: q, data, motivo: "Retorno de externa", destino: x.nome, doc: "", obs: "", usuario: S.uid || "", criadoEm: now, externaId: x.id });
+    const restante = vals.reduce((a, v) => a + (v.r.pend - v.q), 0);
+    if (restante === 0) await S.db.doc("externas/" + x.id).update({ status: "concluida", dataRetorno: data });
+    $("#vErr").hidden = true;
+    toast(restante === 0 ? "Retorno registrado. Externa concluída." : "Retorno parcial registrado");
+    if (restante === 0) $("#dExtV").close(); else renderExtV(true);
+  } catch (err) { handleWriteErr(err, "#vErr"); }
+  finally { btn.disabled = false; }
+}
+async function addFotosExt(files) {
+  const x = S.ext.find(e => e.id === vId); if (!x || !files.length || !S.assets) return;
+  const st = $("#vFotoSt"); st.hidden = false; st.textContent = `Enviando ${files.length} foto${files.length > 1 ? "s" : ""}…`;
+  try {
+    const ids = await uploadFotos(files);
+    await S.db.doc("externas/" + x.id).update({ fotos: [...(x.fotos || []), ...ids] });
+    st.textContent = "Fotos adicionadas."; setTimeout(() => st.hidden = true, 2500);
+  } catch (err) { st.hidden = true; if (err && DB_CODES.includes(err.code)) handleWriteErr(err, "#vErr"); else showErr("#vErr", fotoErr(err)); }
+}
+
+// ---------- checkup ----------
+const ck = { key: "", draft: new Map() };
+const ckData = () => $("#ckData").value || today();
+function ckKey() { return "ck:" + ckData() + ":" + ($("#ckLoc").value || "*"); }
+function ckLoad() { ck.key = ckKey(); ck.draft = new Map(); try { const o = JSON.parse(localStorage.getItem(ck.key) || "{}"); for (const k in o) ck.draft.set(k, o[k]); } catch {} }
+function ckStore() { try { localStorage.setItem(ck.key, JSON.stringify(Object.fromEntries(ck.draft))); } catch {} }
+function ckItems() {
+  const loc = $("#ckLoc").value;
+  return [...S.itens.entries()].filter(([, it]) => !it.arquivado && (!loc || (it.local || "") === loc))
+    .sort((a, b) => (a[1].local || "").localeCompare(b[1].local || "", "pt-BR") || a[1].nome.localeCompare(b[1].nome, "pt-BR"));
+}
+const ckVal = id => { const d = ck.draft.get(id); return d && d.contado !== "" && d.contado != null ? +d.contado : null; };
+const hora = iso => { try { return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); } catch { return ""; } };
+function renderCk(force) {
+  if (!force && document.activeElement && document.activeElement.closest && document.activeElement.closest("#ckBody")) { ckProg(); renderCkHist(); return; }
+  if (ck.key !== ckKey()) ckLoad();
+  const data = ckData(), busca = norm($("#ckBusca").value);
+  const its = ckItems().filter(([, it]) => !busca || norm(it.nome + " " + (it.local || "") + " " + (it.categoria || "")).includes(busca));
+  $("#ckEmpty").hidden = !(S.loadedI && !its.length);
+  if (!S.loadedI) { $("#ckBody").innerHTML = `<tr><td colspan="5" class="status">Carregando itens…</td></tr>`; return; }
+  const w = S.canWrite;
+  $("#ckBody").innerHTML = its.map(([id, it]) => {
+    const esp = saldo(id, data), ext = externa(id), v = ckVal(id), d = ck.draft.get(id) || {};
+    const cls = v == null ? "" : v === esp ? "ck-ok" : "ck-dif";
+    return `<tr class="${cls}" data-ckrow="${esc(id)}">
+      <td>${esc(it.nome)}<div class="sub">${esc(it.local || "Sem local")}${ext ? ` · ${fmtN(ext)} em externa (não contar)` : ""}</div></td>
+      <td class="n"><b>${fmtN(esp)}</b></td>
+      <td class="n"><input type="number" min="0" step="1" data-ckq="${esc(id)}" value="${v == null ? "" : v}" style="width:84px;text-align:right" aria-label="Encontrado de ${esc(it.nome)}"${w ? "" : " disabled"}></td>
+      <td>${w ? `<button class="btn sm${cls === "ck-ok" ? " ckok-on" : ""}" type="button" data-ckok="${esc(id)}" data-esp="${esp}">✓ OK</button>` : ""}</td>
+      <td><input type="text" data-cko="${esc(id)}" value="${esc(d.obs || "")}" maxlength="200" placeholder="${cls === "ck-dif" ? "O que aconteceu?" : ""}"${w ? "" : " disabled"}></td>
+    </tr>`;
+  }).join("");
+  ckProg(); renderCkHist();
+}
+function ckProg() {
+  const data = ckData(), its = ckItems(), n = its.length;
+  let done = 0, dif = 0;
+  for (const [id] of its) { const v = ckVal(id); if (v != null) { done++; if (v !== saldo(id, data)) dif++; } }
+  $("#ckBar").style.width = n ? (done / n * 100) + "%" : "0";
+  $("#ckTxt").textContent = `${fmtN(done)} de ${fmtN(n)} conferidos${dif ? ` · ${fmtN(dif)} com diferença` : ""}`;
+  $("#ckFim").disabled = !n || done < n;
+  $("#ckFim").title = done < n ? "Confira todos os itens para concluir" : "";
+  $("#ckTodos").disabled = done >= n;
+  const loc = $("#ckLoc").value;
+  const feitos = S.ck.filter(c => c.data === data && (c.local || "") === loc).sort((a, b) => (b.criadoEm || "").localeCompare(a.criadoEm || ""));
+  const lbl = (loc ? loc : "todos os locais") + (data === today() ? " hoje" : " em " + fmtD(data));
+  $("#ckHoje").innerHTML = feitos.length
+    ? `<span class="pill ${feitos[0].divergencias ? "late" : "done"}">${feitos[0].divergencias ? feitos[0].divergencias + " diferença" + (feitos[0].divergencias > 1 ? "s" : "") : "Tudo certo"}</span> Checkup de <b>${esc(lbl)}</b> já feito por ${esc(userName(feitos[0].usuario))} às ${hora(feitos[0].criadoEm)}.`
+    : `<span class="pill low">Pendente</span> Checkup de <b>${esc(lbl)}</b> ainda não foi feito.`;
+}
+function renderCkHist() {
+  if (S.db && !S.loadedC) { $("#ckHist").innerHTML = `<tr><td colspan="6" class="status">Carregando…</td></tr>`; return; }
+  const list = [...S.ck].sort((a, b) => (b.data || "").localeCompare(a.data || "") || (b.criadoEm || "").localeCompare(a.criadoEm || "")).slice(0, 60);
+  $("#ckHistEmpty").hidden = list.length > 0;
+  $("#ckHist").innerHTML = list.map(c => `<tr>
+    <td class="num">${fmtD(c.data)}</td><td>${esc(c.local || "Todos os locais")}</td><td>${esc(userName(c.usuario))}</td><td class="num">${hora(c.criadoEm)}</td>
+    <td><span class="pill ${c.divergencias ? "late" : "done"}">${c.divergencias ? c.divergencias + " diferença" + (c.divergencias > 1 ? "s" : "") : "Tudo certo"}</span>${c.ajustado ? ` <span class="sub">estoque ajustado</span>` : ""}</td>
+    <td class="acts"><button class="btn sm" type="button" data-ckv="${esc(c.id)}">Ver</button></td></tr>`).join("");
+}
+function ckFim() {
+  const data = ckData(), its = ckItems();
+  const difs = its.filter(([id]) => ckVal(id) !== saldo(id, data));
+  $("#ckFimMsg").textContent = difs.length
+    ? `${its.length} itens conferidos. ${difs.length} com diferença:`
+    : `${its.length} itens conferidos. Tudo certo: as quantidades encontradas batem com o sistema.`;
+  $("#ckFimDif").innerHTML = difs.length ? `<div class="tw" style="border:1px solid var(--line);border-radius:4px"><table><thead><tr><th>Item</th><th class="n">Esperado</th><th class="n">Encontrado</th></tr></thead><tbody>${difs.map(([id]) => `<tr><td>${esc(itemNome(id))}</td><td class="n">${fmtN(saldo(id, data))}</td><td class="n q-out">${fmtN(ckVal(id))}</td></tr>`).join("")}</tbody></table></div>` : "";
+  $("#ckAjW").hidden = !difs.length; $("#ckAj").checked = true; $("#ckErr").hidden = true;
+  $("#dCkFim").showModal();
+}
+async function ckSalvar() {
+  const data = ckData(), loc = $("#ckLoc").value, its = ckItems();
+  const rows = its.map(([id, it]) => ({ itemId: id, nome: it.nome, localItem: it.local || "", esperado: saldo(id, data), contado: ckVal(id), obs: (ck.draft.get(id) || {}).obs || "" }));
+  const difs = rows.filter(r => r.contado !== r.esperado), aj = difs.length > 0 && $("#ckAj").checked;
+  const btn = $("#ckSalvar"); btn.disabled = true;
+  try {
+    const now = new Date().toISOString();
+    await S.db.collection("checkups").doc().set({ data, local: loc, itens: rows, total: rows.length, divergencias: difs.length, ajustado: aj, usuario: S.uid || "", criadoEm: now });
+    if (aj) for (const r of difs)
+      await S.db.collection("movs").doc().set({ itemId: r.itemId, tipo: "ajuste", qtd: r.contado - r.esperado, contagem: r.contado, data, motivo: "Contagem física", destino: "", doc: "", obs: "Checkup diário" + (r.obs ? ": " + r.obs : ""), usuario: S.uid || "", criadoEm: now });
+    try { localStorage.removeItem(ck.key); } catch {}
+    ck.draft = new Map();
+    $("#dCkFim").close();
+    toast(difs.length ? `Checkup salvo com ${difs.length} diferença${difs.length > 1 ? "s" : ""}${aj ? " (estoque ajustado)" : ""}` : "Checkup salvo: tudo certo");
+    renderCk(true);
+  } catch (err) { handleWriteErr(err, "#ckErr"); }
+  finally { btn.disabled = false; }
+}
+function openCkV(id) {
+  const c = S.ck.find(x => x.id === id); if (!c) return;
+  $("#ckvT").textContent = `Checkup de ${fmtD(c.data)}`;
+  $("#ckvSt").innerHTML = `<span class="pill ${c.divergencias ? "late" : "done"}">${c.divergencias ? c.divergencias + " diferença" + (c.divergencias > 1 ? "s" : "") : "Tudo certo"}</span>`;
+  $("#ckvMeta").textContent = [c.local || "Todos os locais", "Feito por " + userName(c.usuario) + " às " + hora(c.criadoEm), c.total + " itens conferidos", c.ajustado ? "Estoque ajustado com a contagem" : (c.divergencias ? "Estoque não foi ajustado" : "")].filter(Boolean).join(" · ");
+  const rows = [...(c.itens || [])].sort((a, b) => ((b.contado !== b.esperado) - (a.contado !== a.esperado)) || (a.nome || "").localeCompare(b.nome || "", "pt-BR"));
+  $("#ckvBody").innerHTML = rows.map(r => { const d = (r.contado ?? 0) - r.esperado; return `<tr class="${d ? "ck-dif" : "ck-ok"}"><td>${esc(r.nome)}<div class="sub">${esc(r.localItem || "")}</div></td><td class="n">${fmtN(r.esperado)}</td><td class="n">${fmtN(r.contado)}</td><td class="n ${d ? "q-out" : ""}">${d > 0 ? "+" : ""}${d ? fmtN(d) : "—"}</td><td>${esc(r.obs || "")}</td></tr>`; }).join("");
+  $("#dCkV").showModal();
+}
+
+// ---------- navegação ----------
+const VIEWS = ["estoque", "externas", "checkup", "movimentacoes", "relatorios", "usuarios"];
+function currentView() { const h = location.hash.slice(1); return VIEWS.includes(h) && (h !== "usuarios" || S.isAdm) ? h : "estoque"; }
+function route() {
+  const v = currentView();
+  $$("[data-view]").forEach(s => s.hidden = s.id !== "v-" + v);
+  $$("nav.tabs a").forEach(a => { if (a.getAttribute("href") === "#" + v) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  if (v === "relatorios") renderReport();
+  if (v === "checkup") renderCk(true);
+}
+function setWrite(on) { S.canWrite = on; $$("[data-write]").forEach(el => el.hidden = !on); $("#readonly").hidden = on; renderEstoque(); renderMovs(); }
+function renderAll() { refreshLists(); renderEstoque(); renderExt(); if (currentView() === "checkup") renderCk(false); renderMovs(); if (currentView() === "relatorios") renderReport(); if ($("#dExtV").open) renderExtV(false); }
+
+// ---------- eventos ----------
+window.addEventListener("hashchange", route);
+bindSort("#eHead", SORT.e, renderEstoque);
+bindSort("#mHead", SORT.m, renderMovs);
+$("#qIn").onclick = () => openMov("entrada");
+$("#qOut").onclick = () => openMov("saida");
+$("#btnNovoItem").onclick = $("#btnNovoItem2").onclick = () => openItem();
+["#eBusca", "#eLoc", "#eCat", "#eSit", "#eArq"].forEach(s => $(s).addEventListener("input", renderEstoque));
+["#mDe", "#mAte", "#mTipo", "#mBusca"].forEach(s => $(s).addEventListener("input", renderMovs));
+["#rTipo", "#rDe", "#rAte", "#rLoc", "#rCat", "#rItem"].forEach(s => $(s).addEventListener("input", renderReport));
+$("#eBody").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.ret) openMov("entrada", b.dataset.ret, "Retorno de externa", externa(b.dataset.ret));
+  else if (b.dataset.mv) openMov(b.dataset.mv, b.dataset.id);
+  else if (b.dataset.edit) openItem(b.dataset.edit);
+  else if (b.dataset.delitem) excluirItem(b.dataset.delitem);
+});
+function excluirItem(id) {
+  const it = S.itens.get(id); if (!it) return;
+  const movs = S.movs.filter(m => m.itemId === id);
+  const nome = it.nome + (it.local ? " (" + it.local + ")" : "");
+  const msg = movs.length
+    ? `"${nome}" será apagado junto com ${movs.length} lançamento${movs.length > 1 ? "s" : ""} do histórico, e deixará de aparecer nos relatórios. Essa ação não pode ser desfeita. Para tirar o item da lista mantendo o histórico, use Editar → Arquivar.`
+    : `"${nome}" será apagado. Essa ação não pode ser desfeita.`;
+  confirmar("Excluir item?", msg, "Excluir item", async () => {
+    try {
+      for (const m of movs) await S.db.doc("movs/" + m.id).delete();
+      await S.db.doc("itens/" + id).delete();
+      toast("Item excluído");
+    } catch (err) { toast(err && err.code === "invalid_argument" ? "Seu acesso não permite excluir." : "Não foi possível excluir. Tente de novo."); }
+  });
+}
+$("#mBody").addEventListener("click", e => {
+  const b = e.target.closest("button[data-del]"); if (!b) return;
+  const m = S.movs.find(x => x.id === b.dataset.del); if (!m) return;
+  confirmar("Excluir lançamento?", `${TIPO_L[m.tipo]} de ${fmtN(Math.abs(delta(m)))} × ${itemNome(m.itemId)} em ${fmtD(m.data)}. O saldo será recalculado. Essa ação não pode ser desfeita.`, "Excluir", async () => {
+    try { await S.db.doc("movs/" + m.id).delete(); toast("Lançamento excluído"); }
+    catch (err) { toast(err && err.code === "invalid_argument" ? "Seu acesso não permite excluir." : "Não foi possível excluir."); }
+  });
+});
+$("#cOk").onclick = async () => { const fn = confAction; confAction = null; $("#dConf").close(); if (fn) await fn(); };
+$$("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+$("#fItem").addEventListener("submit", saveItem);
+$("#iArq").onclick = toggleArquivo;
+$("#iSit").addEventListener("change", syncSit);
+$("#btnNovaExt").onclick = openExt;
+$("#ckData").value = today();
+["#ckData", "#ckLoc", "#ckBusca"].forEach(s => $(s).addEventListener("input", () => renderCk(true)));
+$("#ckBody").addEventListener("input", e => {
+  const q = e.target.closest("[data-ckq]"), o = e.target.closest("[data-cko]");
+  if (q) {
+    const id = q.dataset.ckq, d = ck.draft.get(id) || {};
+    d.contado = q.value === "" ? "" : Math.max(0, Math.floor(+q.value)); ck.draft.set(id, d); ckStore();
+    const esp = saldo(id, ckData()), v = ckVal(id), tr = q.closest("tr");
+    tr.classList.toggle("ck-ok", v != null && v === esp); tr.classList.toggle("ck-dif", v != null && v !== esp);
+    const b = tr.querySelector("[data-ckok]"); if (b) b.classList.toggle("ckok-on", v != null && v === esp);
+    ckProg();
+  } else if (o) { const id = o.dataset.cko, d = ck.draft.get(id) || {}; d.obs = o.value; ck.draft.set(id, d); ckStore(); }
+});
+$("#ckBody").addEventListener("click", e => {
+  const b = e.target.closest("[data-ckok]"); if (!b) return;
+  const id = b.dataset.ckok, d = ck.draft.get(id) || {}; d.contado = +b.dataset.esp; ck.draft.set(id, d); ckStore(); renderCk(true);
+});
+$("#ckTodos").onclick = () => { const data = ckData(); for (const [id] of ckItems()) if (ckVal(id) == null) { const d = ck.draft.get(id) || {}; d.contado = saldo(id, data); ck.draft.set(id, d); } ckStore(); renderCk(true); };
+$("#ckFim").onclick = ckFim;
+$("#ckSalvar").onclick = ckSalvar;
+$("#ckHist").addEventListener("click", e => { const b = e.target.closest("[data-ckv]"); if (b) openCkV(b.dataset.ckv); });
+$("#xSt").addEventListener("input", renderExt);
+$("#xBusca").addEventListener("input", renderPick);
+$("#xItens").addEventListener("change", e => {
+  const c = e.target.closest("[data-pid]"); if (!c) return;
+  const id = c.dataset.pid, q = c.closest(".pick-row").querySelector("[data-qid]");
+  if (c.checked) { xSel.set(id, Math.max(1, Math.floor(+q.value || 1))); q.disabled = false; q.focus(); q.select(); }
+  else { xSel.delete(id); q.disabled = true; }
+  resumo();
+});
+$("#xItens").addEventListener("input", e => {
+  const q = e.target.closest("[data-qid]");
+  if (q && xSel.has(q.dataset.qid)) { xSel.set(q.dataset.qid, Math.max(0, Math.floor(+q.value || 0))); resumo(); }
+});
+$("#xFotos").addEventListener("change", e => {
+  for (const f of e.target.files) if (!f.type || f.type.startsWith("image/")) xPend.push({ file: f, url: URL.createObjectURL(f) });
+  e.target.value = ""; renderPrev();
+});
+$("#xPrev").addEventListener("click", e => {
+  const b = e.target.closest("[data-rm]"); if (!b) return;
+  const [p] = xPend.splice(+b.dataset.rm, 1); if (p) URL.revokeObjectURL(p.url); renderPrev();
+});
+$("#fExt").addEventListener("submit", saveExt);
+$("#xList").addEventListener("click", e => { const b = e.target.closest("[data-xopen]"); if (b) openExtV(b.dataset.xopen); });
+$("#vRetBtn").onclick = retornoExt;
+$("#vAdd").addEventListener("change", e => { const fs = [...e.target.files].filter(f => !f.type || f.type.startsWith("image/")); e.target.value = ""; addFotosExt(fs); });
+$("#fMov").addEventListener("submit", saveMov);
+$$('input[name="mvTipo"]').forEach(r => r.addEventListener("change", syncMovForm));
+$("#mvItem").addEventListener("change", syncMovForm);
+$("#mvData").addEventListener("change", syncMovForm);
+$("#rXlsx").onclick = exportXlsx;
+$("#rPdf").onclick = exportPdf;
+
+// filtros iniciais
+$("#mDe").value = monthStart(); $("#mAte").value = today();
+$("#rDe").value = monthStart(); $("#rAte").value = today();
+route(); renderAll();
+
+// ---------- conexão (Supabase) ----------
+const CFG = window.CONFIG || {};
+let sb = null, perfilAtual = null, perfisCache = new Map();
+const rid = () => (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, "") : Date.now().toString(36) + Math.random().toString(36).slice(2)).slice(0, 20);
+function mapErr(e) {
+  const m = String((e && (e.message || e.error_description)) || "");
+  if (e && (e.code === "42501" || /row-level security|permission denied/i.test(m))) return { code: "invalid_argument", message: m };
+  if (/fetch|network|Failed to/i.test(m)) return { code: "unavailable", message: m };
+  return { code: "unavailable", message: m };
+}
+function supaDB() {
+  const cache = {}, loaded = {}, subs = {}, docSubs = {};
+  let channel = null;
+  const snapOf = c => ({ docs: [...(cache[c] || new Map())].map(([id, data]) => ({ id, exists: true, data: () => data })), metadata: { fromCache: false, hasPendingWrites: false } });
+  const emit = c => {
+    (subs[c] || []).forEach(f => f(snapOf(c)));
+    for (const k in docSubs) if (k.startsWith(c + "/")) { const id = k.slice(c.length + 1), d = cache[c] && cache[c].get(id); docSubs[k].forEach(f => f({ id, exists: !!d, data: () => d })); }
+  };
+  async function load(c) {
+    const all = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await sb.from("docs").select("id,data").eq("colecao", c).range(from, from + 999);
+      if (error) throw mapErr(error);
+      all.push(...data); if (data.length < 1000) break;
+    }
+    cache[c] = new Map(all.map(r => [r.id, r.data])); loaded[c] = true; emit(c);
+  }
+  function ensureChannel() {
+    if (channel) return;
+    channel = sb.channel("docs-tempo-real")
+      .on("postgres_changes", { event: "*", schema: "public", table: "docs" }, p => {
+        const row = p.eventType === "DELETE" ? p.old : p.new; if (!row || !row.colecao) return;
+        const c = row.colecao; if (!cache[c]) return;
+        if (p.eventType === "DELETE") cache[c].delete(row.id); else cache[c].set(row.id, row.data);
+        emit(c);
+      })
+      .subscribe(st => { if (st === "SUBSCRIBED") $("#sync").textContent = "Sincronizado em tempo real"; else if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") $("#sync").textContent = "Reconectando…"; });
+  }
+  const reloadAll = () => Object.keys(loaded).forEach(c => load(c).catch(() => {}));
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reloadAll(); });
+  window.addEventListener("online", reloadAll);
+  const ref = (c, id) => ({
+    id, path: c + "/" + id,
+    async set(b) {
+      const data = JSON.parse(JSON.stringify(b));
+      const { error } = await sb.from("docs").upsert({ colecao: c, id, data, atualizado_em: new Date().toISOString() });
+      if (error) throw mapErr(error);
+      (cache[c] ||= new Map()).set(id, data); emit(c);
+    },
+    async update(b) {
+      const cur = cache[c] && cache[c].get(id); if (!cur) throw { code: "invalid_argument" };
+      const data = { ...cur, ...JSON.parse(JSON.stringify(b)) };
+      const { data: rows, error } = await sb.from("docs").update({ data, atualizado_em: new Date().toISOString() }).eq("colecao", c).eq("id", id).select("id");
+      if (error) throw mapErr(error); if (!rows || !rows.length) throw { code: "invalid_argument" };
+      cache[c].set(id, data); emit(c);
+    },
+    async delete() {
+      const { data: rows, error } = await sb.from("docs").delete().eq("colecao", c).eq("id", id).select("id");
+      if (error) throw mapErr(error); if (!rows || !rows.length) throw { code: "invalid_argument" };
+      cache[c] && cache[c].delete(id); emit(c);
+    },
+    onSnapshot(fn, err) {
+      const k = c + "/" + id; (docSubs[k] ||= []).push(fn); ensureChannel();
+      if (loaded[c]) { const d = cache[c].get(id); fn({ id, exists: !!d, data: () => d }); }
+      else if (!subs[c]) { subs[c] = []; load(c).catch(e => err && err(e)); }
+      return () => {};
+    }
+  });
+  return {
+    doc(p) { const [c, id] = p.split("/"); return ref(c, id); },
+    collection(c) {
+      return {
+        doc: id => ref(c, id || rid()),
+        onSnapshot(fn, err) {
+          (subs[c] ||= []).push(fn); ensureChannel();
+          if (loaded[c]) fn(snapOf(c)); else load(c).catch(e => err && err(e));
+          return () => {};
+        }
+      };
+    }
+  };
+}
+const supaDownloads = {
+  async save({ filename, data }) {
+    const blob = data instanceof Blob ? data : new Blob([data]);
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    return { status: "saved" };
+  }
+};
+const supaAssets = {
+  async upload(blob, opts) {
+    const type = (opts && opts.type) || blob.type || "image/jpeg";
+    const ext = ({ "image/png": "png", "image/webp": "webp", "image/gif": "gif" })[type] || "jpg";
+    const path = `${S.uid}/${new Date().toISOString().slice(0, 10)}-${rid()}.${ext}`;
+    const { error } = await sb.storage.from("fotos").upload(path, blob, { contentType: type, upsert: false });
+    if (error) { const m = String(error.message || ""); throw { code: /size|large/i.test(m) ? "too_large" : /mime|type/i.test(m) ? "unsupported_type" : /row-level|security|denied/i.test(m) ? "not_granted" : "upstream_error", message: m }; }
+    return { id: path, url: "" };
+  }
+};
+// URLs assinadas das fotos (bucket privado)
+const fotoUrls = new Map(), fotoPend = new Set(); let fotoTimer = null;
+const PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+foto = id => {
+  const u = fotoUrls.get(id); if (u) return u;
+  if (sb && !fotoPend.has(id)) {
+    fotoPend.add(id); clearTimeout(fotoTimer);
+    fotoTimer = setTimeout(async () => {
+      const ids = [...fotoPend]; fotoPend.clear();
+      try {
+        const { data } = await sb.storage.from("fotos").createSignedUrls(ids, 60 * 60 * 12);
+        (data || []).forEach(r => { if (r.signedUrl) fotoUrls.set(r.path, r.signedUrl); });
+      } catch {}
+      renderExt(); if ($("#dExtV").open) renderExtV(false);
+    }, 30);
+  }
+  return PIXEL;
+};
+// ---------- usuários ----------
+const PAPEL_L = { adm: "ADM", comum: "Comum", pendente: "Sem acesso" };
+async function carregarPerfis() {
+  const { data, error } = await sb.from("perfis").select("id,email,nome,foto,papel,criado_em").order("criado_em");
+  if (error) return;
+  perfisCache = new Map(data.map(p => [p.id, p]));
+  for (const p of data) S.names[p.id] = p.nome || p.email || "Usuário";
+  renderUsuarios(); renderMovs(); if (currentView() === "checkup") renderCk(false); if (currentView() === "relatorios") renderReport();
+  const pend = data.filter(p => p.papel === "pendente").length;
+  $("#navUsu").textContent = "Usuários" + (pend && S.isAdm ? ` (${pend})` : "");
+}
+function renderUsuarios() {
+  const tb = $("#uBody"); if (!tb) return;
+  const lista = [...perfisCache.values()].sort((a, b) => (a.papel === "pendente" ? 0 : 1) - (b.papel === "pendente" ? 0 : 1) || (a.nome || "").localeCompare(b.nome || "", "pt-BR"));
+  tb.innerHTML = lista.map(p => `<tr>
+    <td><div class="u-who">${p.foto ? `<img src="${esc(p.foto)}" alt="" referrerpolicy="no-referrer">` : `<span class="u-ini">${esc((p.nome || p.email || "?").slice(0, 1).toUpperCase())}</span>`}<div>${esc(p.nome || "—")}${p.id === S.uid ? ` <span class="sub">(você)</span>` : ""}<div class="sub">${esc(p.email || "")}</div></div></div></td>
+    <td><span class="pill ${p.papel === "adm" ? "ext" : p.papel === "comum" ? "ok" : "low"}">${PAPEL_L[p.papel] || p.papel}</span></td>
+    <td><select data-papel="${esc(p.id)}" aria-label="Permissão de ${esc(p.nome || p.email || "")}">
+      <option value="pendente"${p.papel === "pendente" ? " selected" : ""}>Sem acesso</option>
+      <option value="comum"${p.papel === "comum" ? " selected" : ""}>Comum</option>
+      <option value="adm"${p.papel === "adm" ? " selected" : ""}>ADM</option></select></td>
+    <td class="num">${p.criado_em ? fmtD(p.criado_em.slice(0, 10)) : ""}</td></tr>`).join("");
+}
+async function mudarPapel(id, papel, sel) {
+  sel.disabled = true;
+  const { data, error } = await sb.from("perfis").update({ papel }).eq("id", id).select("id");
+  sel.disabled = false;
+  if (error || !data || !data.length) {
+    toast(/ADM/.test(String(error && error.message)) ? "Precisa existir pelo menos um ADM." : "Não foi possível alterar a permissão.");
+    renderUsuarios(); return;
+  }
+  const p = perfisCache.get(id); if (p) p.papel = papel;
+  toast("Permissão atualizada"); carregarPerfis();
+  if (id === S.uid && papel !== "adm") location.reload();
+}
+// ---------- telas de entrada ----------
+function tela(html) { const g = $("#gate"); g.innerHTML = `<div class="gate-card"><img src="logo.png" alt="MBL" class="gate-logo">${html}</div>`; g.hidden = false; }
+function telaLogin(msg) {
+  tela(`<h1>Estoque de Equipamentos</h1><p>Entre com sua conta Google para acessar o sistema.</p>
+    <button class="btn primary gbtn" type="button" id="gLogin"><svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Entrar com Google</button>
+    ${msg ? `<p class="err">${esc(msg)}</p>` : ""}`);
+  $("#gLogin").onclick = async () => {
+    const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname, queryParams: { prompt: "select_account" } } });
+    if (error) telaLogin("Não foi possível iniciar o login: " + error.message);
+  };
+}
+function telaPendente(p) {
+  tela(`<h1>Aguardando liberação</h1><p>Sua conta <b>${esc(p.email || "")}</b> foi registrada, mas ainda não tem acesso. Peça para um ADM liberar seu acesso na aba Usuários.</p>
+    <div class="dlg-acts" style="justify-content:center"><button class="btn" type="button" id="gSair">Sair</button><button class="btn primary" type="button" id="gCheck">Verificar novamente</button></div>`);
+  $("#gSair").onclick = sair; $("#gCheck").onclick = () => location.reload();
+  setTimeout(() => location.reload(), 60000);
+}
+async function sair() { try { await sb.auth.signOut(); } catch {} location.href = location.origin + location.pathname; }
+
+async function start() {
+  if (!window.supabase || !CFG.SUPABASE_URL || /COLE_AQUI/.test(CFG.SUPABASE_URL + CFG.SUPABASE_ANON_KEY)) {
+    tela(`<h1>Configuração pendente</h1><p>Preencha a URL e a chave do Supabase no arquivo <b>config.js</b>.</p>`); return;
+  }
+  sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, { auth: { flowType: "pkce", persistSession: true, detectSessionInUrl: true } });
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { telaLogin(new URLSearchParams(location.search).get("error_description") || ""); return; }
+  if (location.search) history.replaceState(null, "", location.pathname + location.hash);
+  S.uid = session.user.id;
+  let p = null;
+  for (let i = 0; i < 3 && !p; i++) { const r = await sb.from("perfis").select("*").eq("id", S.uid).maybeSingle(); p = r.data; if (!p) await new Promise(r => setTimeout(r, 800)); }
+  if (!p) { tela(`<h1>Erro ao carregar o perfil</h1><p>Seu login funcionou, mas o perfil não foi encontrado. Confira se o arquivo schema.sql foi executado no Supabase.</p><div class="dlg-acts" style="justify-content:center"><button class="btn" id="gSair" type="button">Sair</button></div>`); $("#gSair").onclick = sair; return; }
+  perfilAtual = p;
+  if (p.papel === "pendente") { telaPendente(p); return; }
+  $("#gate").hidden = true;
+  S.isAdm = p.papel === "adm";
+  document.body.classList.toggle("is-adm", S.isAdm);
+  $("#meuNome").textContent = p.nome || p.email;
+  $("#meuPapel").textContent = PAPEL_L[p.papel];
+  if (p.foto) { $("#meuAvatar").src = p.foto; $("#meuAvatar").hidden = false; }
+  $("#btnSair").onclick = sair;
+  S.db = supaDB(); S.downloads = supaDownloads; S.assets = supaAssets;
+  S.user = { profiles: async ids => Object.fromEntries(ids.map(id => [id, { name: S.names[id] || "" }])) };
+  setWrite(true); route();
+  carregarPerfis();
+  sb.channel("perfis-tempo-real").on("postgres_changes", { event: "*", schema: "public", table: "perfis" }, pl => {
+    if (pl.new && pl.new.id === S.uid && pl.new.papel !== perfilAtual.papel) location.reload(); else carregarPerfis();
+  }).subscribe();
+  sb.auth.onAuthStateChange(ev => { if (ev === "SIGNED_OUT") location.reload(); });
+  const db = S.db;
+  const onErr = () => { $("#sync").textContent = "Sem conexão"; $("#offline").textContent = "Não foi possível carregar os dados. Verifique a conexão e recarregue a página."; $("#offline").hidden = false; S.loadedI = S.loadedM = true; renderAll(); };
+  db.doc("config/locais").onSnapshot(d => {
+    const l = d.exists && d.data().lista;
+    S.locais = Array.isArray(l) && l.length ? l.map(String) : LOCAIS_PADRAO.slice();
+    renderAll();
+  }, () => {});
+  db.collection("checkups").onSnapshot(snap => { S.ck = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.loadedC = true; renderAll(); }, () => { S.loadedC = true; renderAll(); });
+  db.collection("externas").onSnapshot(snap => { S.ext = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.loadedX = true; renderAll(); }, () => { S.loadedX = true; renderAll(); });
+  db.collection("itens").onSnapshot(snap => { S.itens = new Map(snap.docs.map(d => [d.id, d.data()])); S.loadedI = true; $("#offline").hidden = true; renderAll(); }, onErr);
+  db.collection("movs").onSnapshot(snap => { S.movs = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.loadedM = true; renderAll(); }, onErr);
+}
+$("#uBody").addEventListener("change", e => { const s = e.target.closest("[data-papel]"); if (s) mudarPapel(s.dataset.papel, s.value, s); });
+start();
+})();
+</script>
+</body></html>
