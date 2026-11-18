@@ -48,7 +48,7 @@ Cole no arquivo `config.js`. **Nunca** use a chave `service_role` aqui.
 ## 5. Primeiro acesso
 
 - **A primeira conta que entrar vira ADM automaticamente.** Entre com a sua conta antes de passar o link para a equipe.
-- Cada nova pessoa que entrar com o Google aparece na aba **Usuários** como **Sem acesso**. O ADM escolhe **Comum** ou **ADM** para liberar.
+- Cada nova pessoa que entrar com o Google aparece na aba **Usuários** como **Aguardando**. O ADM escolhe **Comum** ou **ADM** para liberar, ou **Bloqueado** para impedir o acesso de vez (a pessoa não vê nada e não volta como pedido novo).
 - Sempre precisa existir pelo menos um ADM (o sistema bloqueia remover o último).
 
 ### O que cada perfil pode fazer

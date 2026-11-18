@@ -329,7 +329,7 @@ dialog h2 { font-family: var(--f-display); font-size: 18px; margin: 0; font-weig
   <section id="v-usuarios" data-view hidden>
     <div class="panel">
       <div class="bar"><h2>Usuários</h2></div>
-      <div class="note info" style="margin:14px 16px 0">Quem entra pela primeira vez com o Google aparece aqui como <b>Sem acesso</b>. Escolha <b>Comum</b> ou <b>ADM</b> para liberar. ADM pode editar e excluir itens, excluir lançamentos e gerenciar usuários. Comum lança entradas, saídas, externas e checkups.</div>
+      <div class="note info" style="margin:14px 16px 0">Quem entra pela primeira vez com o Google aparece no topo como <b>Aguardando</b>. Escolha <b>Comum</b> ou <b>ADM</b> para liberar, ou <b>Bloqueado</b> para impedir o acesso de vez: a pessoa não vê nada e não volta a aparecer como pedido novo. ADM pode editar e excluir itens, excluir lançamentos e gerenciar usuários. Comum lança entradas, saídas, externas e checkups.</div>
       <div class="tw" style="margin-top:14px"><table>
         <thead><tr><th>Pessoa</th><th>Acesso atual</th><th>Alterar para</th><th>Desde</th></tr></thead>
         <tbody id="uBody"></tbody>
@@ -1482,7 +1482,8 @@ foto = id => {
   return PIXEL;
 };
 // ---------- usuários ----------
-const PAPEL_L = { adm: "ADM", comum: "Comum", pendente: "Sem acesso" };
+const PAPEL_L = { adm: "ADM", comum: "Comum", pendente: "Aguardando", bloqueado: "Bloqueado" };
+const PAPEL_ORD = { pendente: 0, adm: 1, comum: 2, bloqueado: 3 };
 async function carregarPerfis() {
   const { data, error } = await sb.from("perfis").select("id,email,nome,foto,papel,criado_em").order("criado_em");
   if (error) return;
@@ -1494,14 +1495,15 @@ async function carregarPerfis() {
 }
 function renderUsuarios() {
   const tb = $("#uBody"); if (!tb) return;
-  const lista = [...perfisCache.values()].sort((a, b) => (a.papel === "pendente" ? 0 : 1) - (b.papel === "pendente" ? 0 : 1) || (a.nome || "").localeCompare(b.nome || "", "pt-BR"));
+  const lista = [...perfisCache.values()].sort((a, b) => (PAPEL_ORD[a.papel] ?? 9) - (PAPEL_ORD[b.papel] ?? 9) || (a.nome || "").localeCompare(b.nome || "", "pt-BR"));
   tb.innerHTML = lista.map(p => `<tr>
     <td><div class="u-who">${p.foto ? `<img src="${esc(p.foto)}" alt="" referrerpolicy="no-referrer">` : `<span class="u-ini">${esc((p.nome || p.email || "?").slice(0, 1).toUpperCase())}</span>`}<div>${esc(p.nome || "—")}${p.id === S.uid ? ` <span class="sub">(você)</span>` : ""}<div class="sub">${esc(p.email || "")}</div></div></div></td>
-    <td><span class="pill ${p.papel === "adm" ? "ext" : p.papel === "comum" ? "ok" : "low"}">${PAPEL_L[p.papel] || p.papel}</span></td>
+    <td><span class="pill ${p.papel === "adm" ? "ext" : p.papel === "comum" ? "ok" : p.papel === "bloqueado" ? "zero" : "low"}">${PAPEL_L[p.papel] || p.papel}</span></td>
     <td><select data-papel="${esc(p.id)}" aria-label="Permissão de ${esc(p.nome || p.email || "")}">
-      <option value="pendente"${p.papel === "pendente" ? " selected" : ""}>Sem acesso</option>
+      <option value="pendente"${p.papel === "pendente" ? " selected" : ""}>Aguardando</option>
       <option value="comum"${p.papel === "comum" ? " selected" : ""}>Comum</option>
-      <option value="adm"${p.papel === "adm" ? " selected" : ""}>ADM</option></select></td>
+      <option value="adm"${p.papel === "adm" ? " selected" : ""}>ADM</option>
+      <option value="bloqueado"${p.papel === "bloqueado" ? " selected" : ""}>Bloqueado</option></select></td>
     <td class="num">${p.criado_em ? fmtD(p.criado_em.slice(0, 10)) : ""}</td></tr>`).join("");
 }
 async function mudarPapel(id, papel, sel) {
@@ -1549,6 +1551,7 @@ async function start() {
   if (!p) { tela(`<h1>Erro ao carregar o perfil</h1><p>Seu login funcionou, mas o perfil não foi encontrado. Confira se o arquivo schema.sql foi executado no Supabase.</p><div class="dlg-acts" style="justify-content:center"><button class="btn" id="gSair" type="button">Sair</button></div>`); $("#gSair").onclick = sair; return; }
   perfilAtual = p;
   if (p.papel === "pendente") { telaPendente(p); return; }
+  if (p.papel === "bloqueado") { tela(`<h1>Acesso bloqueado</h1><p>A conta <b>${esc(p.email || "")}</b> não tem permissão para acessar este sistema.</p><div class="dlg-acts" style="justify-content:center"><button class="btn" type="button" id="gSair">Sair</button></div>`); $("#gSair").onclick = sair; return; }
   $("#gate").hidden = true;
   S.isAdm = p.papel === "adm";
   document.body.classList.toggle("is-adm", S.isAdm);

@@ -9,7 +9,7 @@ create table if not exists public.perfis (
   email      text,
   nome       text,
   foto       text,
-  papel      text not null default 'pendente' check (papel in ('pendente', 'comum', 'adm')),
+  papel      text not null default 'pendente' check (papel in ('pendente', 'comum', 'adm', 'bloqueado')),
   criado_em  timestamptz not null default now()
 );
 
