@@ -54,7 +54,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--head); color: var(--head-fg); border-bottom: 3px solid var(--hi);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.top-in { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px 0; }
+.top-in { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; min-height: 61px; padding-block: 10px; }
 .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
 .brand-logo { height: 28px; width: auto; display: block; padding-right: 12px; border-right: 1px solid rgba(255,255,255,.25); }
 .brand-mark { width: 32px; height: 32px; border-radius: 4px; background: var(--hi); display: grid; place-items: center; }
@@ -70,10 +70,40 @@ header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; b
 .top .btn.in:hover, .top .btn.out:hover { filter: brightness(1.1); }
 .top .btn.in .sign, .top .btn.out .sign { color: #ffffff; }
 .top .btn .sign { color: var(--hi); }
-nav.tabs { flex-basis: 100%; display: flex; gap: 2px; overflow-x: auto; }
-nav.tabs a { padding: 10px 14px; color: var(--head-muted); text-decoration: none; font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .07em; border-bottom: 3px solid transparent; margin-bottom: -3px; white-space: nowrap; }
-nav.tabs a:hover { color: var(--head-fg); }
-nav.tabs a[aria-current="page"] { color: var(--head-fg); border-bottom-color: var(--hi); }
+.app { display: flex; min-height: 100vh; }
+.col { flex: 1; min-width: 0; }
+.side { position: sticky; top: 0; height: 100vh; width: 232px; flex: none; background: var(--head); color: var(--head-fg); display: flex; flex-direction: column; border-right: 3px solid var(--hi); z-index: 7; padding-left: env(safe-area-inset-left, 0px); }
+@media (prefers-reduced-motion: no-preference) { .side { transition: width .18s ease, transform .2s ease; } }
+.side-top { height: 64px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,.12); flex: none; }
+.side-logo { height: 28px; width: auto; display: block; }
+.side svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+nav.tabs { display: flex; flex-direction: column; gap: 2px; padding: 12px 10px; overflow-y: auto; }
+nav.tabs a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 4px; color: var(--head-muted); text-decoration: none; font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; border-left: 3px solid transparent; }
+nav.tabs a:hover { color: var(--head-fg); background: rgba(255,255,255,.06); }
+nav.tabs a[aria-current="page"] { color: var(--head-fg); background: rgba(255,255,255,.1); border-left-color: var(--hi); }
+nav.tabs a[aria-current="page"] svg { color: var(--hi); }
+.side-toggle { margin-top: auto; display: flex; align-items: center; gap: 12px; background: transparent; border: 0; border-top: 1px solid rgba(255,255,255,.12); color: var(--head-muted); padding: 14px 22px; cursor: pointer; font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+.side-toggle:hover { color: var(--head-fg); }
+.side.collapsed { width: 70px; }
+.side.collapsed .lbl { display: none; }
+.side.collapsed .side-top { padding: 0 10px; justify-content: center; }
+.side.collapsed .side-logo { width: 44px; height: auto; }
+.side.collapsed nav.tabs a { justify-content: center; padding: 11px 0; }
+.side.collapsed .side-toggle { justify-content: center; padding-inline: 0; }
+.side.collapsed .side-toggle svg { transform: rotate(180deg); }
+#menuBtn { display: none; }
+.menu-btn { background: transparent !important; border-color: rgba(255,255,255,.35) !important; color: var(--head-fg) !important; padding: 7px 9px; }
+.menu-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.side-bk { position: fixed; inset: 0; background: rgba(5,12,30,.5); z-index: 6; }
+@media (max-width: 760px) {
+  .side { position: fixed; left: 0; top: 0; bottom: 0; height: auto; width: 260px; transform: translateX(-105%); box-shadow: var(--shadow); padding-top: env(safe-area-inset-top, 0px); }
+  .side.open { transform: none; }
+  .side.collapsed { width: 260px; }
+  .side.collapsed .lbl { display: inline; }
+  .side.collapsed nav.tabs a { justify-content: flex-start; padding: 10px 12px; }
+  .side-toggle { display: none; }
+  #menuBtn { display: inline-flex; }
+}
 
 main { max-width: 1180px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
 .btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -224,10 +254,25 @@ dialog h2 { font-family: var(--f-display); font-size: 18px; margin: 0; font-weig
 
 </head><body>
 <div id="gate" class="gate">Carregando…</div>
+<div class="app">
+<aside class="side" id="side" aria-label="Menu">
+  <div class="side-top"><img class="side-logo" src="logo.png" alt="MBL" width="76" height="28"></div>
+  <nav class="tabs" aria-label="Seções">
+      <a href="#checkup" title="Checkup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3.5h6v3H9z"/><path d="M9 5H6v15.5h12V5h-3"/><path d="M9 13.5l2 2 4-4.5"/></svg><span class="lbl">Checkup</span></a>
+      <a href="#estoque" title="Estoque"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span class="lbl">Estoque</span></a>
+      <a href="#externas" title="Externas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6h11.5v10H2.5z"/><path d="M14 10h4l3.5 3.5V16H14"/><circle cx="6.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg><span class="lbl">Externas</span></a>
+      <a href="#movimentacoes" title="Movimentações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 20V4M3 8l4-4 4 4"/><path d="M17 4v16M13 16l4 4 4-4"/></svg><span class="lbl">Movimentações</span></a>
+      <a href="#relatorios" title="Relatórios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14.5 3v4.5H19"/><path d="M9.5 17v-3M12.5 17v-5M15.5 17v-2"/></svg><span class="lbl">Relatórios</span></a>
+      <a href="#usuarios" id="navUsu" class="adm-only" title="Usuários"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14.6c1.8.8 3 2.6 3.5 5.4"/></svg><span class="lbl" id="navUsuL">Usuários</span></a>
+  </nav>
+  <button class="side-toggle" type="button" id="sideToggle" aria-label="Recolher menu" title="Recolher menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span class="lbl">Recolher</span></button>
+</aside>
+<div class="side-bk" id="sideBk" hidden></div>
+<div class="col">
 <header class="top">
   <div class="top-in">
+    <button class="btn menu-btn" type="button" id="menuBtn" aria-label="Abrir menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="brand">
-      <img class="brand-logo" src="logo.png" alt="MBL" width="76" height="28">
       <div><h1>Estoque de Equipamentos</h1><small id="sync">Conectando…</small></div>
     </div>
     <div class="me"><img id="meuAvatar" alt="" hidden referrerpolicy="no-referrer"><div><b id="meuNome"></b><span id="meuPapel"></span></div><button class="btn sm" type="button" id="btnSair">Sair</button></div>
@@ -235,14 +280,6 @@ dialog h2 { font-family: var(--f-display); font-size: 18px; margin: 0; font-weig
       <button class="btn in" type="button" id="qIn"><span class="sign">+</span><span class="lbl">Entrada</span></button>
       <button class="btn out" type="button" id="qOut"><span class="sign">−</span><span class="lbl">Saída</span></button>
     </div>
-    <nav class="tabs" aria-label="Seções">
-      <a href="#checkup">Checkup</a>
-      <a href="#estoque">Estoque</a>
-      <a href="#externas">Externas</a>
-      <a href="#movimentacoes">Movimentações</a>
-      <a href="#relatorios">Relatórios</a>
-      <a href="#usuarios" id="navUsu" class="adm-only">Usuários</a>
-    </nav>
   </div>
 </header>
 
@@ -383,6 +420,8 @@ dialog h2 { font-family: var(--f-display); font-size: 18px; margin: 0; font-weig
     </div>
   </section>
 </main>
+</div>
+</div>
 
 <!-- Diálogo: item -->
 <dialog id="dItem">
@@ -1261,6 +1300,18 @@ function renderAll() { refreshLists(); renderEstoque(); renderExt(); if (current
 
 // ---------- eventos ----------
 window.addEventListener("hashchange", route);
+(() => {
+  const side = $("#side"), bk = $("#sideBk"), mob = () => matchMedia("(max-width: 760px)").matches;
+  try { if (localStorage.getItem("menu-recolhido") === "1") side.classList.add("collapsed"); } catch {}
+  const sync = () => { const c = side.classList.contains("collapsed"); $("#sideToggle").setAttribute("aria-label", c ? "Expandir menu" : "Recolher menu"); $("#sideToggle").title = c ? "Expandir menu" : "Recolher menu"; $("#sideToggle .lbl").textContent = c ? "Expandir" : "Recolher"; };
+  sync();
+  $("#sideToggle").onclick = () => { side.classList.toggle("collapsed"); try { localStorage.setItem("menu-recolhido", side.classList.contains("collapsed") ? "1" : "0"); } catch {} sync(); };
+  const fechar = () => { side.classList.remove("open"); bk.hidden = true; };
+  $("#menuBtn").onclick = () => { side.classList.add("open"); bk.hidden = false; };
+  bk.onclick = fechar;
+  side.addEventListener("click", e => { if (e.target.closest("nav.tabs a") && mob()) fechar(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && side.classList.contains("open")) fechar(); });
+})();
 bindSort("#eHead", SORT.e, renderEstoque);
 bindSort("#mHead", SORT.m, renderMovs);
 $("#qIn").onclick = () => openMov("entrada");
@@ -1491,7 +1542,7 @@ async function carregarPerfis() {
   for (const p of data) S.names[p.id] = p.nome || p.email || "Usuário";
   renderUsuarios(); renderMovs(); if (currentView() === "checkup") renderCk(false); if (currentView() === "relatorios") renderReport();
   const pend = data.filter(p => p.papel === "pendente").length;
-  $("#navUsu").textContent = "Usuários" + (pend && S.isAdm ? ` (${pend})` : "");
+  $("#navUsuL").textContent = "Usuários" + (pend && S.isAdm ? ` (${pend})` : "");
 }
 function renderUsuarios() {
   const tb = $("#uBody"); if (!tb) return;
